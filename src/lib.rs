@@ -1,4 +1,6 @@
 // src/lib.rs
 mod fixer;
 
-pub use fixer::{fix_json, FixReport};
+pub mod prelude {
+    pub use crate::fixer::{fix_json, FixReport};
+}

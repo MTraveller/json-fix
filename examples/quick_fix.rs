@@ -1,4 +1,4 @@
-use json_fix::fix_json;
+use json_fix::prelude::*;
 
 fn main() {
     let broken_json = r#"{"emotion": "hopeful, "score": 80}"#;

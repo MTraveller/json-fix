@@ -1,4 +1,4 @@
-use json_fix::fix_json;
+use json_fix::prelude::*;
 
 #[test]
 fn test_fix_broken_json() {

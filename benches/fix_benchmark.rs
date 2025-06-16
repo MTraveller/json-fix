@@ -1,6 +1,6 @@
 // json_fixer/benches/fix_benchmark.rs
 use criterion::{criterion_group, criterion_main, Criterion};
-use json_fix::fix_json;
+use json_fix::prelude::*;
 
 fn benchmark_fix_json(c: &mut Criterion) {
     let broken_json = r#"{"emotion": "hopeful, \"score": 80}"#;
