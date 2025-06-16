@@ -41,10 +41,10 @@ fn main() {
 
 ## 📂 Usage
 
-### Add to `Cargo.toml`:
+### Install:
 
-```toml
-json-fix = "0.1.0"
+```bash
+cargo add json-fix
 ```
 
 ### As a library:
