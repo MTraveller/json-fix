@@ -1,3 +1,6 @@
+[![Crates.io](https://img.shields.io/crates/v/json-fix.svg)](https://crates.io/crates/json-fix)
+[![Docs.rs](https://docs.rs/json-fix/badge.svg)](https://docs.rs/json-fix)
+
 # 🛠️ json-fix
 
 **json-fix** is a blazing-fast, Rust-powered JSON repair library built for resilient data pipelines, GPT outputs, web scraping tools, and any system where malformed JSON sneaks in.
