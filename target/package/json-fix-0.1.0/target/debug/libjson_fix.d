@@ -1,0 +1,1 @@
+/Users/mturous/Documents/Muzinezz/Owned/json-fixer/target/package/json-fix-0.1.0/target/debug/libjson_fix.rlib: /Users/mturous/Documents/Muzinezz/Owned/json-fixer/target/package/json-fix-0.1.0/src/fixer.rs /Users/mturous/Documents/Muzinezz/Owned/json-fixer/target/package/json-fix-0.1.0/src/lib.rs

@@ -17,11 +17,11 @@ enum FixStep {
     // ... (other steps could be added here)
 }
 
-fn apply_step<F: FnOnce(String) -> String>(input: String, step: FixStep, f: F) -> String {
+fn apply_step<F: FnOnce(String) -> String>(input: String, _step: FixStep, f: F) -> String {
     f(input)
 }
 
-pub fn fix_json_syntax(input: &str) -> FixReport {
+pub fn fix_json(input: &str) -> FixReport {
     let mut steps = Vec::new();
     let mut fixed = input.trim().to_string();
 
