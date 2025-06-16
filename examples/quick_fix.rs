@@ -1,8 +1,8 @@
-use json_fix::prelude::*;
+use json_fix::fix_json_syntax;
 
 fn main() {
     let broken_json = r#"{"emotion": "hopeful, "score": 80}"#;
-    let report = fix_json(broken_json);
+    let report = fix_json_syntax(broken_json);
 
     println!("✅ Fixed JSON:\n{}", report.fixed);
     println!("🔧 Steps Applied: {:?}", report.steps);

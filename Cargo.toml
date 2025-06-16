@@ -5,8 +5,18 @@ edition = "2021"
 description = "Robust JSON repair engine for fixing malformed or partial JSON strings, especially from AI output"
 license = "MIT"
 repository = "https://github.com/MTraveller/json-fix"
+categories = ["data-structures", "parsing", "text-processing"]
+keywords = ["json", "repair", "ai", "fix", "parser"]
+documentation = "https://docs.rs/json-fix"
 
 [dependencies]
-criterion = "0.6.0"
 fancy-regex = "0.14"
 serde_json = "1"
+serde = { version = "1", features = ["derive"] }
+
+[features]
+default = []
+prelude = []
+
+[dev-dependencies]
+criterion = "0.6.0"

@@ -23,13 +23,11 @@ It detects and fixes broken JSON strings — from misescaped quotes to missing c
 ## 🧪 Example
 
 ```rust
-use json_fix::prelude::*;
-
-use json_fix::prelude::*;
+use json_fix::fix_json_syntax;
 
 fn main() {
     let broken = r#"{ "name": "Momo, "age": 3 }"#;
-    let result = fix_json(broken);
+    let result = fix_json_syntax(broken);
 
     if result.fixed != broken {
         println!("✅ Fixed JSON:\n{}", result.fixed);
@@ -52,7 +50,7 @@ json-fix = "0.1.0"
 ### As a library:
 
 ```rust
-use json_fix::prelude::*;
+let result = fix_json_syntax(broken);
 ```
 
 ### From CLI:
