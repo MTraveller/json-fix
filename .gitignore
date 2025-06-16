@@ -1,0 +1,46 @@
+# ===================================
+# 🚀 JSON-FIX SUPRA ELITE .gitignore
+# ===================================
+
+# Cargo build
+/target/
+**/*.rs.bk
+
+# Dependency folders
+/Cargo.lock
+
+# Logs and temp
+*.log
+*.tmp
+*.swp
+*.swo
+
+# IDE files
+.vscode/
+.idea/
+*.code-workspace
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Test and benchmark output
+criterion/
+*.profraw
+
+# Backup or generated files
+*.bak
+*.old
+
+# Examples or local debug output
+examples/output.json
+
+# Coverage or CI tools
+coverage/
+*.lcov
+
+# Node leftovers (if ever used)
+node_modules/
+
+# Personal
+*.local
