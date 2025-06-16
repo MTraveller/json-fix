@@ -1,6 +1,6 @@
 [package]
 name = "json-fix"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Robust JSON repair engine for fixing malformed or partial JSON strings, especially from AI output"
 license = "MIT"
