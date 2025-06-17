@@ -1,14 +1,21 @@
 // src/diagnostics/bracket.rs
 
+use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
+
 #[derive(Debug, Default)]
 pub struct BracketDiagnostics {
     pub has_missing_closing: bool,
     pub has_extra_closing: bool,
     pub has_unbalanced_pairs: bool,
+    pub category: DiagnosticCategory,
+    pub severity: DiagnosticSeverity,
 }
 
 pub fn analyze_brackets(json: &str) -> BracketDiagnostics {
     let mut diag = BracketDiagnostics::default();
+
+    diag.category = DiagnosticCategory::Structural;
+    diag.severity = DiagnosticSeverity::Error;
 
     let mut curly = 0;
     let mut square = 0;

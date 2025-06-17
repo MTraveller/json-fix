@@ -1,15 +1,21 @@
 // src/diagnostics/colon.rs
 
+use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
 use regex::Regex;
 
 #[derive(Debug, Default)]
 pub struct ColonDiagnostics {
     pub has_missing_colons: bool,
     pub has_colon_misuse: bool,
+    pub category: DiagnosticCategory,
+    pub severity: DiagnosticSeverity,
 }
 
 pub fn analyze_colons(input: &str) -> ColonDiagnostics {
     let mut diag = ColonDiagnostics::default();
+
+    diag.category = DiagnosticCategory::Syntax;
+    diag.severity = DiagnosticSeverity::Error;
 
     // Detect missing colons between key-value pairs
     // e.g. "key" "value" or "key" 123

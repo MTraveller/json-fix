@@ -1,5 +1,6 @@
 // src/diagnostics/comma.rs
 
+use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
 use regex::Regex;
 
 #[derive(Debug, Default)]
@@ -9,10 +10,15 @@ pub struct CommaDiagnostics {
     pub has_key_value_misalignment: bool,
     pub has_stray_commas: bool,
     pub has_comma_value_chaining: bool,
+    pub category: DiagnosticCategory,
+    pub severity: DiagnosticSeverity,
 }
 
 pub fn analyze_commas(json: &str) -> CommaDiagnostics {
     let mut diag = CommaDiagnostics::default();
+
+    diag.category = DiagnosticCategory::Syntax;
+    diag.severity = DiagnosticSeverity::Warning;
 
     if json.contains(",,") {
         diag.has_double_commas = true;

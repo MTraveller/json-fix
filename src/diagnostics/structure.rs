@@ -1,15 +1,21 @@
 // src/diagnostics/structure.rs
 
+use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
 use regex::Regex;
 
 #[derive(Debug, Default)]
 pub struct StructureDiagnostics {
     pub has_concatenated_json: bool,
     pub has_orphaned_braces: bool,
+    pub category: DiagnosticCategory,
+    pub severity: DiagnosticSeverity,
 }
 
 pub fn analyze_structure(input: &str) -> StructureDiagnostics {
     let mut diag = StructureDiagnostics::default();
+
+    diag.category = DiagnosticCategory::Structural;
+    diag.severity = DiagnosticSeverity::Error;
 
     // Detects if multiple root-level JSON objects are concatenated without a comma or array
     let concat_pattern = Regex::new(r"\}\s*\{").unwrap();

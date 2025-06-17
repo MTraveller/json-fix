@@ -6,6 +6,7 @@ use crate::diagnostics::{
     key::KeyDiagnostics, markdown::MarkdownDiagnostics, misc::MiscDiagnostics,
     quote::QuoteDiagnostics, structure::StructureDiagnostics,
 };
+use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
 
 #[derive(Debug, Default)]
 pub struct FixDiagnostics {
@@ -34,6 +35,9 @@ pub struct FixDiagnostics {
     pub has_colon_errors: bool,
     pub has_structure_issues: bool,
     pub has_js_issues: bool,
+
+    pub highest_severity: DiagnosticSeverity,
+    pub categories_present: Vec<DiagnosticCategory>,
 }
 
 pub fn analyze_all_diagnostics(input: &str) -> FixDiagnostics {
@@ -49,6 +53,45 @@ pub fn analyze_all_diagnostics(input: &str) -> FixDiagnostics {
     let colon_diag = crate::diagnostics::colon::analyze_colons(input);
     let structure_diag = crate::diagnostics::structure::analyze_structure(input);
     let js_diag = crate::diagnostics::js_style::analyze_js_styles(input);
+
+    let mut categories_present = vec![];
+    let mut highest_severity = DiagnosticSeverity::Info;
+
+    for diag in [
+        &array_diag.severity,
+        &bracket_diag.severity,
+        &comma_diag.severity,
+        &escape_diag.severity,
+        &key_diag.severity,
+        &markdown_diag.severity,
+        &quote_diag.severity,
+        &misc_diag.severity,
+        &colon_diag.severity,
+        &structure_diag.severity,
+        &js_diag.severity,
+    ] {
+        if *diag as u8 > highest_severity as u8 {
+            highest_severity = *diag;
+        }
+    }
+
+    for diag in [
+        &array_diag.category,
+        &bracket_diag.category,
+        &comma_diag.category,
+        &escape_diag.category,
+        &key_diag.category,
+        &markdown_diag.category,
+        &quote_diag.category,
+        &misc_diag.category,
+        &colon_diag.category,
+        &structure_diag.category,
+        &js_diag.category,
+    ] {
+        if !categories_present.contains(diag) {
+            categories_present.push(*diag);
+        }
+    }
 
     FixDiagnostics {
         has_array_issues: array_diag.has_trailing_commas
@@ -86,5 +129,8 @@ pub fn analyze_all_diagnostics(input: &str) -> FixDiagnostics {
         colon_diag: Some(colon_diag),
         structure_diag: Some(structure_diag),
         js_diag: Some(js_diag),
+
+        highest_severity,
+        categories_present,
     }
 }

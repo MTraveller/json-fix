@@ -1,5 +1,6 @@
 // src/diagnostics/escape.rs
 
+use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
 use fancy_regex::Regex as FanRegex;
 use regex::Regex;
 
@@ -7,10 +8,15 @@ use regex::Regex;
 pub struct EscapeDiagnostics {
     pub has_invalid_escape: bool,
     pub has_broken_unicode: bool,
+    pub category: DiagnosticCategory,
+    pub severity: DiagnosticSeverity,
 }
 
 pub fn analyze_escapes(json: &str) -> EscapeDiagnostics {
     let mut diag = EscapeDiagnostics::default();
+
+    diag.category = DiagnosticCategory::Syntax;
+    diag.severity = DiagnosticSeverity::Error;
 
     // Detect invalid escape sequences (e.g., \q, \x, etc.)
     let re_invalid_escape = Regex::new(r#"\\[^btnfru"\\]"#).unwrap();

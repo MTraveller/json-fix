@@ -1,5 +1,6 @@
 // src/diagnostics/key.rs
 
+use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
 use fancy_regex::Regex as FanRegex;
 use regex::Regex;
 
@@ -7,10 +8,15 @@ use regex::Regex;
 pub struct KeyDiagnostics {
     pub has_unquoted_keys: bool,
     pub has_key_traps: bool,
+    pub category: DiagnosticCategory,
+    pub severity: DiagnosticSeverity,
 }
 
 pub fn analyze_keys(json: &str) -> KeyDiagnostics {
     let mut diag = KeyDiagnostics::default();
+
+    diag.category = DiagnosticCategory::Syntax;
+    diag.severity = DiagnosticSeverity::Warning;
 
     // Detect unquoted keys (e.g., {key: "value"})
     let re_unquoted_keys =

@@ -1,3 +1,4 @@
+use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
 use regex::Regex;
 
 #[derive(Debug, Default)]
@@ -5,10 +6,15 @@ pub struct JSStyleDiagnostics {
     pub has_undefined: bool,
     pub has_nan: bool,
     pub has_comments: bool,
+    pub category: DiagnosticCategory,
+    pub severity: DiagnosticSeverity,
 }
 
 pub fn analyze_js_styles(input: &str) -> JSStyleDiagnostics {
     let mut diag = JSStyleDiagnostics::default();
+
+    diag.category = DiagnosticCategory::JSStyle;
+    diag.severity = DiagnosticSeverity::Warning;
 
     let re_undefined = Regex::new(r"\bundefined\b").unwrap();
     if re_undefined.is_match(input) {

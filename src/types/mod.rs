@@ -1,3 +1,4 @@
+pub mod diagnostic_meta;
 pub mod fix_report;
 pub mod fix_step;
 pub mod fixer_context;
