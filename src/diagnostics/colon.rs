@@ -19,13 +19,14 @@ pub fn analyze_colons(input: &str) -> ColonDiagnostics {
 
     // Detect missing colons between key-value pairs
     // e.g. "key" "value" or "key" 123
-    let missing_colon_pattern = Regex::new(r#""\w+"\s+("[^"]+"|\d+|true|false|null)"#).unwrap();
+    let missing_colon_pattern = Regex::new(r#""[^"]+"\s+(?="[^"]+"|\d+|true|false|null)"#).unwrap();
     if missing_colon_pattern.is_match(input) {
         diag.has_missing_colons = true;
     }
 
     // Detect invalid colon usage like "::"
-    if input.contains("::") {
+    let colon_misuse_pattern = Regex::new(r"::+").unwrap();
+    if colon_misuse_pattern.is_match(input) {
         diag.has_colon_misuse = true;
     }
 

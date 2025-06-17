@@ -1,7 +1,6 @@
 // src/diagnostics/markdown.rs
 
 use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
-use fancy_regex::Regex as FanRegex;
 use regex::Regex;
 
 #[derive(Debug, Default)]
@@ -19,8 +18,8 @@ pub fn analyze_markdown(json: &str) -> MarkdownDiagnostics {
     diag.severity = DiagnosticSeverity::Info;
 
     // Detect markdown code block wrappers (```json ... ```)
-    let re_md_wrapper = FanRegex::new(r"(?s)```(?:json)?\s*.*?```").unwrap();
-    if re_md_wrapper.is_match(json).unwrap_or(false) {
+    let re_md_wrapper = Regex::new(r"(?s)```(?:json)?\s*.*?```").unwrap();
+    if re_md_wrapper.is_match(json) {
         diag.has_markdown_wrappers = true;
     }
 

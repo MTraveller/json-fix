@@ -20,21 +20,22 @@ pub fn analyze_commas(json: &str) -> CommaDiagnostics {
     diag.category = DiagnosticCategory::Syntax;
     diag.severity = DiagnosticSeverity::Warning;
 
-    if json.contains(",,") {
+    let re_double_commas = Regex::new(r#",\s*,+"#).unwrap();
+    if re_double_commas.is_match(json) {
         diag.has_double_commas = true;
     }
 
-    let re_key_val_misaligned = Regex::new(r#"\s*:\s*,\s*""#).unwrap();
+    let re_key_val_misaligned = Regex::new(r#""[^"]+"\s*:\s*,\s*""#).unwrap();
     if re_key_val_misaligned.is_match(json) {
         diag.has_key_value_misalignment = true;
     }
 
-    let re_orphaned_string = Regex::new(r#"\bnull\s*,\s*"[^"]+""#).unwrap();
+    let re_orphaned_string = Regex::new(r#"(null|true|false|\d+)\s*,\s*"[^"]+""#).unwrap();
     if re_orphaned_string.is_match(json) {
         diag.has_orphaned_values = true;
     }
 
-    let re_stray_commas = Regex::new(r#"(\{|\[)\s*,"#).unwrap();
+    let re_stray_commas = Regex::new(r#"[\[\{]\s*,\s*"#).unwrap();
     if re_stray_commas.is_match(json) {
         diag.has_stray_commas = true;
     }

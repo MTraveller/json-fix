@@ -23,10 +23,10 @@ pub fn analyze_structure(input: &str) -> StructureDiagnostics {
         diag.has_concatenated_json = true;
     }
 
-    // Counts opening and closing braces to check for imbalance
-    let open_count = input.matches('{').count();
-    let close_count = input.matches('}').count();
-    if open_count != close_count {
+    // Detect potential brace imbalance via regex match rather than just count
+    let re_orphaned_open = Regex::new(r#"\{[^\{\}]*$"#).unwrap();
+    let re_orphaned_close = Regex::new(r#"^[^\{\}]*\}"#).unwrap();
+    if re_orphaned_open.is_match(input) || re_orphaned_close.is_match(input) {
         diag.has_orphaned_braces = true;
     }
 

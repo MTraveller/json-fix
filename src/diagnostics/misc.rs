@@ -18,7 +18,7 @@ pub fn analyze_misc(json: &str) -> MiscDiagnostics {
     diag.severity = DiagnosticSeverity::Info;
 
     // Detect null slots like `"key": ,` or `"key": ]` needing filling
-    let re_null_slots = Regex::new(r#"(":\s*)(,|\])"#).unwrap();
+    let re_null_slots = Regex::new(r#""\s*:\s*(,|\])"#).unwrap();
     if re_null_slots.is_match(json) {
         diag.has_null_slots = true;
     }

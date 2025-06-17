@@ -1,6 +1,7 @@
 // src/diagnostics/bracket.rs
 
 use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
+use regex::Regex;
 
 #[derive(Debug, Default)]
 pub struct BracketDiagnostics {
@@ -23,14 +24,22 @@ pub fn analyze_brackets(json: &str) -> BracketDiagnostics {
     for ch in json.chars() {
         match ch {
             '{' => curly += 1,
-            '}' => curly -= 1,
+            '}' => {
+                if curly == 0 {
+                    diag.has_extra_closing = true;
+                } else {
+                    curly -= 1;
+                }
+            }
             '[' => square += 1,
-            ']' => square -= 1,
+            ']' => {
+                if square == 0 {
+                    diag.has_extra_closing = true;
+                } else {
+                    square -= 1;
+                }
+            }
             _ => {}
-        }
-
-        if curly < 0 || square < 0 {
-            diag.has_extra_closing = true;
         }
     }
 
@@ -38,9 +47,7 @@ pub fn analyze_brackets(json: &str) -> BracketDiagnostics {
         diag.has_missing_closing = true;
     }
 
-    if diag.has_missing_closing || diag.has_extra_closing {
-        diag.has_unbalanced_pairs = true;
-    }
+    diag.has_unbalanced_pairs = diag.has_missing_closing || diag.has_extra_closing;
 
     diag
 }

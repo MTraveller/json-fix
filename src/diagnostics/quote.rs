@@ -24,15 +24,10 @@ pub fn analyze_quotes(json: &str) -> QuoteDiagnostics {
         diag.has_single_quotes = true;
     }
 
-    // Detect curly quotes: “ ” ‘ ’
-    if json.contains('“') || json.contains('”') || json.contains('‘') || json.contains('’')
-    {
+    // Detect curly/smart quotes: “ ” ‘ ’
+    let re_curly_smart = Regex::new(r#"[“”‘’]"#).unwrap();
+    if re_curly_smart.is_match(json) {
         diag.has_curly_quotes = true;
-    }
-
-    // Detect smart quotes (often copy-pasted from documents)
-    let re_smart = Regex::new(r"[“”‘’]").unwrap();
-    if re_smart.is_match(json) {
         diag.has_smart_quotes = true;
     }
 

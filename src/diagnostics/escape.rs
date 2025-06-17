@@ -1,7 +1,6 @@
 // src/diagnostics/escape.rs
 
 use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
-use fancy_regex::Regex as FanRegex;
 use regex::Regex;
 
 #[derive(Debug, Default)]
@@ -25,8 +24,9 @@ pub fn analyze_escapes(json: &str) -> EscapeDiagnostics {
     }
 
     // Detect broken Unicode sequences (e.g., \u12, \uGHIJ)
-    let re_broken_unicode = FanRegex::new(r#"\\u[0-9a-fA-F]{0,3}(?![0-9a-fA-F])"#).unwrap();
-    if re_broken_unicode.is_match(json).unwrap_or(false) {
+    let re_broken_unicode =
+        Regex::new(r#"\\u(?:[0-9a-fA-F]{1,3}(?![0-9a-fA-F])|[^0-9a-fA-F]{1,4})"#).unwrap();
+    if re_broken_unicode.is_match(json) {
         diag.has_broken_unicode = true;
     }
 
