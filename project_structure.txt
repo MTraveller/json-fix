@@ -1,0 +1,75 @@
+Cargo.lock
+Cargo.toml
+LICENSE
+README.md
+project_structure.txt
+src/
+  diagnostics/
+    array.rs
+    bracket.rs
+    comma.rs
+    diagnostics.rs
+    escape.rs
+    key.rs
+    markdown.rs
+    misc.rs
+    mod.rs
+    quote.rs
+  fixers/
+    arrays/
+      fixer.rs
+      mod.rs
+      subfixes.rs
+    brackets/
+      fixer.rs
+      mod.rs
+      subfixes.rs
+    comma/
+      fixer.rs
+      mod.rs
+      subfixes.rs
+    escape/
+      fixer.rs
+      mod.rs
+      subfixes.rs
+    keys/
+      fixer.rs
+      mod.rs
+      subfixes.rs
+    markdown/
+      fixer.rs
+      mod.rs
+      subfixes.rs
+    misc/
+      fixer.rs
+      mod.rs
+      subfixes.rs
+    mod.rs
+    quotes/
+      fixer.rs
+      mod.rs
+      subfixes.rs
+  lib.rs
+  orchestrator/
+    fixer.rs
+    mod.rs
+  types/
+    fix_report.rs
+    fix_step.rs
+    fixer_context.rs
+    json_error.rs
+    mod.rs
+  utils/
+    mod.rs
+    regex_utils.rs
+    string_utils.rs
+tests/
+  fix_arrays_tests.rs
+  fix_brackets_tests.rs
+  fix_commas_tests.rs
+  fix_escape_tests.rs
+  fix_keys_tests.rs
+  fix_markdown_tests.rs
+  fix_misc_tests.rs
+  fix_quotes_tests.rs
+  fixer.rs
