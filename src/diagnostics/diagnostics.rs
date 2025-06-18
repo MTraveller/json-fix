@@ -8,7 +8,7 @@ use crate::diagnostics::{
 };
 use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct FixDiagnostics {
     // Domain-specific flags
     pub array_diag: Option<ArrayDiagnostics>,
@@ -27,7 +27,7 @@ pub struct FixDiagnostics {
     pub has_array_issues: bool,
     pub has_bracket_issues: bool,
     pub has_missing_commas: bool,
-    pub has_escape_errors: bool,
+    pub has_escape_issues: bool,
     pub has_key_errors: bool,
     pub has_markdown_wrappers: bool,
     pub has_quote_issues: bool,
@@ -105,7 +105,7 @@ pub fn analyze_all_diagnostics(input: &str) -> FixDiagnostics {
             || comma_diag.has_orphaned_values
             || comma_diag.has_stray_commas
             || comma_diag.has_comma_value_chaining,
-        has_escape_errors: escape_diag.has_invalid_escape || escape_diag.has_broken_unicode,
+        has_escape_issues: escape_diag.has_invalid_escape || escape_diag.has_broken_unicode,
         has_key_errors: key_diag.has_unquoted_keys || key_diag.has_key_traps,
         has_markdown_wrappers: markdown_diag.has_markdown_wrappers
             || markdown_diag.has_embedded_json,

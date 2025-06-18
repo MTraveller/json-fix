@@ -1,20 +1,22 @@
 // src/fixers/escape/fixer.rs
 
 use crate::fixers::escape::subfixes::SubEscapeFixer;
-use crate::types::fix_step::FixStep;
+use crate::types::fixer_context::FixContext;
 
-pub struct EscapeFixer<'a> {
-    pub input: &'a str,
-    pub steps: &'a mut Vec<FixStep>,
+pub struct EscapeFixer<'ctx> {
+    pub ctx: &'ctx mut FixContext,
 }
 
-impl<'a> EscapeFixer<'a> {
+impl<'ctx> EscapeFixer<'ctx> {
     pub fn apply_all(&mut self) -> String {
-        let mut output = self.input.to_string();
+        SubEscapeFixer::fix_invalid_escapes(self.ctx);
+        SubEscapeFixer::fix_broken_unicode(self.ctx);
 
-        output = SubEscapeFixer::fix_invalid_escapes(&output, self.steps);
-        output = SubEscapeFixer::fix_broken_unicode(&output, self.steps);
+        self.ctx.input.to_string()
+    }
 
-        output
+    pub fn apply(ctx: &mut FixContext) {
+        let mut fixer = EscapeFixer { ctx };
+        fixer.apply_all();
     }
 }

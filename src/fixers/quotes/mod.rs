@@ -4,11 +4,11 @@ pub mod fixer;
 pub mod subfixes;
 
 use crate::fixers::quotes::fixer::QuoteFixer;
-use crate::types::fix_step::FixStep;
+use crate::types::fixer_context::FixContext;
 
 /// Entry point for quote-related fixes.
-/// This is what the orchestrator calls.
-pub fn fix_quotes(input: &str, steps: &mut Vec<FixStep>) -> String {
-    let mut fixer = QuoteFixer { input, steps };
+/// Called by the orchestrator when quote issues are detected.
+pub fn fix_quotes<'a>(ctx: &mut FixContext) -> String {
+    let mut fixer = QuoteFixer { ctx };
     fixer.apply_all()
 }

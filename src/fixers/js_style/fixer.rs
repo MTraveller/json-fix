@@ -1,19 +1,21 @@
 use crate::fixers::js_style::subfixes::SubJsStyleFixer;
-use crate::types::fix_step::FixStep;
+use crate::types::fixer_context::FixContext;
 
-pub struct JsStyleFixer<'a> {
-    pub input: &'a str,
-    pub steps: &'a mut Vec<FixStep>,
+pub struct JsStyleFixer<'ctx> {
+    pub ctx: &'ctx mut FixContext,
 }
 
-impl<'a> JsStyleFixer<'a> {
+impl<'ctx> JsStyleFixer<'ctx> {
     pub fn apply_all(&mut self) -> String {
-        let mut output = self.input.to_string();
+        SubJsStyleFixer::fix_undefined(self.ctx);
+        SubJsStyleFixer::fix_nan(self.ctx);
+        SubJsStyleFixer::remove_js_comments(self.ctx);
 
-        output = SubJsStyleFixer::fix_undefined(&output, self.steps);
-        output = SubJsStyleFixer::fix_nan(&output, self.steps);
-        output = SubJsStyleFixer::remove_js_comments(&output, self.steps);
+        self.ctx.input.to_string()
+    }
 
-        output
+    pub fn apply(ctx: &mut FixContext) {
+        let mut fixer = JsStyleFixer { ctx };
+        fixer.apply_all();
     }
 }

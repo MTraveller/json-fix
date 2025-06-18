@@ -4,9 +4,11 @@ pub mod fixer;
 pub mod subfixes;
 
 use crate::fixers::misc::fixer::MiscFixer;
-use crate::types::fix_step::FixStep;
+use crate::types::fixer_context::FixContext;
 
-pub fn fix_misc(input: &str, steps: &mut Vec<FixStep>) -> String {
-    let mut fixer = MiscFixer { input, steps };
+/// Entry point for miscellaneous fixes.
+/// Called by the orchestrator when miscellaneous issues are detected.
+pub fn fix_misc<'a>(ctx: &mut FixContext) -> String {
+    let mut fixer = MiscFixer { ctx };
     fixer.apply_all()
 }

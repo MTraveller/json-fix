@@ -1,20 +1,22 @@
 // src/fixers/brackets/fixer.rs
 
 use crate::fixers::brackets::subfixes::SubBracketFixer;
-use crate::types::fix_step::FixStep;
+use crate::types::fixer_context::FixContext;
 
-pub struct BracketFixer<'a> {
-    pub input: &'a str,
-    pub steps: &'a mut Vec<FixStep>,
+pub struct BracketFixer<'ctx> {
+    pub ctx: &'ctx mut FixContext,
 }
 
-impl<'a> BracketFixer<'a> {
+impl<'ctx> BracketFixer<'ctx> {
     pub fn apply_all(&mut self) -> String {
-        let mut output = self.input.to_string();
+        SubBracketFixer::fix_extra_closing_brace(self.ctx);
+        SubBracketFixer::fix_missing_closing_brace(self.ctx);
 
-        output = SubBracketFixer::fix_extra_closing_brace(&output, self.steps);
-        output = SubBracketFixer::fix_missing_closing_brace(&output, self.steps);
+        self.ctx.input.to_string()
+    }
 
-        output
+    pub fn apply(ctx: &mut FixContext) {
+        let mut fixer = BracketFixer { ctx };
+        fixer.apply_all();
     }
 }

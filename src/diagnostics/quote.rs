@@ -1,9 +1,9 @@
 // src/diagnostics/quote.rs
 
 use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
-use regex::Regex;
+use crate::utils::regex_utils::{RE_CURLY_QUOTES, RE_SINGLE_QUOTES, RE_SMART_QUOTES};
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct QuoteDiagnostics {
     pub has_single_quotes: bool,
     pub has_curly_quotes: bool,
@@ -19,15 +19,17 @@ pub fn analyze_quotes(json: &str) -> QuoteDiagnostics {
     diag.severity = DiagnosticSeverity::Warning;
 
     // Match single-quoted keys or values
-    let re_single = Regex::new(r#"'[^']*'"#).unwrap();
-    if re_single.is_match(json) {
+    if RE_SINGLE_QUOTES.is_match(json) {
         diag.has_single_quotes = true;
     }
 
-    // Detect curly/smart quotes: “ ” ‘ ’
-    let re_curly_smart = Regex::new(r#"[“”‘’]"#).unwrap();
-    if re_curly_smart.is_match(json) {
+    // Detect curly quotes: ‘ ’
+    if RE_CURLY_QUOTES.is_match(json) {
         diag.has_curly_quotes = true;
+    }
+
+    // Detect smart quotes: “ ”
+    if RE_SMART_QUOTES.is_match(json) {
         diag.has_smart_quotes = true;
     }
 

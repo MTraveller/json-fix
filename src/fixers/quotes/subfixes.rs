@@ -1,24 +1,35 @@
 // src/fixers/quotes/subfixes.rs
 
-use crate::types::fix_step::FixStep;
-use regex::Regex;
+use crate::types::{emotion_phase::EmotionPhase, fix_step::FixStep, fixer_context::FixContext};
+use crate::utils::regex_utils::RE_SINGLE_QUOTES;
+use crate::utils::soulfixer_utils::apply_fix;
 
 pub struct SubQuotesFixer;
 
 impl SubQuotesFixer {
-    pub fn fix_single_quotes(input: &str, steps: &mut Vec<FixStep>) -> String {
-        let re = Regex::new(r#"'([^']*)'"#).unwrap();
-        let new_output = re.replace_all(input, r#""$1""#).to_string();
-        if new_output != input {
-            steps.push(FixStep::QuotesSingleConverted);
+    pub fn fix_single_quotes(ctx: &mut FixContext) -> String {
+        if ctx.emotion_phase == EmotionPhase::Frozen {
+            ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_single_quotes.");
+            return ctx.input.to_string();
         }
-        new_output
+
+        apply_fix(
+            ctx,
+            &RE_SINGLE_QUOTES,
+            r#""$1""#,
+            FixStep::QuotesSingleConverted,
+            "Converted single quotes to standard double quotes",
+        )
     }
 
-    pub fn fix_curly_quotes(input: &str, steps: &mut Vec<FixStep>) -> String {
-        let mut new_output = input.to_string();
+    pub fn fix_curly_quotes(ctx: &mut FixContext) -> String {
+        if ctx.emotion_phase == EmotionPhase::Frozen {
+            ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_curly_quotes.");
+            return ctx.input.to_string();
+        }
 
-        let curly_pairs = vec![("“", "\""), ("”", "\""), ("‘", "'"), ("’", "'")];
+        let mut new_output = ctx.input.to_string();
+        let curly_pairs = [("“", "\""), ("”", "\""), ("‘", "'"), ("’", "'")];
 
         let mut changed = false;
         for (curly, ascii) in curly_pairs {
@@ -29,7 +40,8 @@ impl SubQuotesFixer {
         }
 
         if changed {
-            steps.push(FixStep::QuotesCurlyNormalized);
+            ctx.record(FixStep::QuotesCurlyNormalized);
+            ctx.whisper("🔧 Normalized curly quotes to ASCII quotes");
         }
 
         new_output

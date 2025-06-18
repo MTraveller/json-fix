@@ -1,20 +1,22 @@
 // src/fixers/quotes/fixer.rs
 
 use crate::fixers::quotes::subfixes::SubQuotesFixer;
-use crate::types::fix_step::FixStep;
+use crate::types::fixer_context::FixContext;
 
-pub struct QuoteFixer<'a> {
-    pub input: &'a str,
-    pub steps: &'a mut Vec<FixStep>,
+pub struct QuoteFixer<'ctx> {
+    pub ctx: &'ctx mut FixContext,
 }
 
-impl<'a> QuoteFixer<'a> {
+impl<'ctx> QuoteFixer<'ctx> {
     pub fn apply_all(&mut self) -> String {
-        let mut output = self.input.to_string();
+        SubQuotesFixer::fix_single_quotes(self.ctx);
+        SubQuotesFixer::fix_curly_quotes(self.ctx);
 
-        output = SubQuotesFixer::fix_single_quotes(&output, self.steps);
-        output = SubQuotesFixer::fix_curly_quotes(&output, self.steps);
+        self.ctx.input.to_string()
+    }
 
-        output
+    pub fn apply(ctx: &mut FixContext) {
+        let mut fixer = QuoteFixer { ctx };
+        fixer.apply_all();
     }
 }

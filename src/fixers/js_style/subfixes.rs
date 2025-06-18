@@ -1,41 +1,57 @@
-use crate::types::fix_step::FixStep;
+// src/fixers/js_style/subfixes.rs
+
+use crate::types::{emotion_phase::EmotionPhase, fix_step::FixStep, fixer_context::FixContext};
+use crate::utils::regex_utils::{RE_JS_COMMENTS, RE_NAN_INFINITY, RE_UNDEFINED};
+use crate::utils::soulfixer_utils::apply_fix;
 
 pub struct SubJsStyleFixer;
 
 impl SubJsStyleFixer {
     /// Converts `undefined` → `null`
-    pub fn fix_undefined(input: &str, steps: &mut Vec<FixStep>) -> String {
-        let re = regex::Regex::new(r"\bundefined\b").unwrap();
-        let new_input = re.replace_all(input, "null").to_string();
-
-        if new_input != input {
-            steps.push(FixStep::JsUndefinedReplaced);
+    pub fn fix_undefined(ctx: &mut FixContext) -> String {
+        if ctx.emotion_phase == EmotionPhase::Frozen {
+            ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_undefined.");
+            return ctx.input.to_string();
         }
 
-        new_input
+        apply_fix(
+            ctx,
+            &RE_UNDEFINED,
+            "null",
+            FixStep::JsUndefinedReplaced,
+            "Replaced `undefined` with `null`",
+        )
     }
 
     /// Converts `NaN` or `Infinity` → `null`
-    pub fn fix_nan(input: &str, steps: &mut Vec<FixStep>) -> String {
-        let re = regex::Regex::new(r"\b(NaN|Infinity|-Infinity)\b").unwrap();
-        let new_input = re.replace_all(input, "null").to_string();
-
-        if new_input != input {
-            steps.push(FixStep::JsNaNReplaced);
+    pub fn fix_nan(ctx: &mut FixContext) -> String {
+        if ctx.emotion_phase == EmotionPhase::Frozen {
+            ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_nan.");
+            return ctx.input.to_string();
         }
 
-        new_input
+        apply_fix(
+            ctx,
+            &RE_NAN_INFINITY,
+            "null",
+            FixStep::JsNaNReplaced,
+            "Replaced `NaN` and `Infinity` with `null`",
+        )
     }
 
     /// Removes JS-style comments
-    pub fn remove_js_comments(input: &str, steps: &mut Vec<FixStep>) -> String {
-        let re = regex::Regex::new(r"(//[^\n]*|/\*[\s\S]*?\*/)").unwrap();
-        let new_input = re.replace_all(input, "").to_string();
-
-        if new_input != input {
-            steps.push(FixStep::JsCommentsRemoved);
+    pub fn remove_js_comments(ctx: &mut FixContext) -> String {
+        if ctx.emotion_phase == EmotionPhase::Frozen {
+            ctx.whisper("🥶 EmotionPhase is Frozen. Skipping remove_js_comments.");
+            return ctx.input.to_string();
         }
 
-        new_input
+        apply_fix(
+            ctx,
+            &RE_JS_COMMENTS,
+            "",
+            FixStep::JsCommentsRemoved,
+            "Removed JavaScript-style comments",
+        )
     }
 }

@@ -1,9 +1,9 @@
 // src/diagnostics/escape.rs
 
 use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
-use regex::Regex;
+use crate::utils::regex_utils::{RE_BROKEN_UNICODE_ESCAPES, RE_INVALID_ESCAPES};
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct EscapeDiagnostics {
     pub has_invalid_escape: bool,
     pub has_broken_unicode: bool,
@@ -18,15 +18,13 @@ pub fn analyze_escapes(json: &str) -> EscapeDiagnostics {
     diag.severity = DiagnosticSeverity::Error;
 
     // Detect invalid escape sequences (e.g., \q, \x, etc.)
-    let re_invalid_escape = Regex::new(r#"\\[^btnfru"\\]"#).unwrap();
-    if re_invalid_escape.is_match(json) {
+    // let re_invalid_escape = Regex::new(r#"\\[^btnfru"\\]"#).unwrap();
+    if RE_INVALID_ESCAPES.is_match(json) {
         diag.has_invalid_escape = true;
     }
 
     // Detect broken Unicode sequences (e.g., \u12, \uGHIJ)
-    let re_broken_unicode =
-        Regex::new(r#"\\u(?:[0-9a-fA-F]{1,3}(?![0-9a-fA-F])|[^0-9a-fA-F]{1,4})"#).unwrap();
-    if re_broken_unicode.is_match(json) {
+    if RE_BROKEN_UNICODE_ESCAPES.is_match(json) {
         diag.has_broken_unicode = true;
     }
 

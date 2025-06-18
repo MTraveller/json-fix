@@ -1,9 +1,9 @@
 // src/diagnostics/misc.rs
 
 use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
-use regex::Regex;
+use crate::utils::regex_utils::{RE_FALLBACK_ARTIFACTS, RE_NULL_SLOTS};
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct MiscDiagnostics {
     pub has_null_slots: bool,
     pub has_fallbacks: bool,
@@ -18,14 +18,12 @@ pub fn analyze_misc(json: &str) -> MiscDiagnostics {
     diag.severity = DiagnosticSeverity::Info;
 
     // Detect null slots like `"key": ,` or `"key": ]` needing filling
-    let re_null_slots = Regex::new(r#""\s*:\s*(,|\])"#).unwrap();
-    if re_null_slots.is_match(json) {
+    if RE_NULL_SLOTS.is_match(json) {
         diag.has_null_slots = true;
     }
 
     // Detect fallback artifact patterns such as `, "something", ,`
-    let re_fallbacks = Regex::new(r#"\s*,\s*("[^"]*")\s*,\s*"#).unwrap();
-    if re_fallbacks.is_match(json) {
+    if RE_FALLBACK_ARTIFACTS.is_match(json) {
         diag.has_fallbacks = true;
     }
 

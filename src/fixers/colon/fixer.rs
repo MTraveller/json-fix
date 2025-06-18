@@ -1,18 +1,20 @@
 use crate::fixers::colon::subfixes::SubColonFixer;
-use crate::types::fix_step::FixStep;
+use crate::types::fixer_context::FixContext;
 
-pub struct ColonFixer<'a> {
-    pub input: &'a str,
-    pub steps: &'a mut Vec<FixStep>,
+pub struct ColonFixer<'ctx> {
+    pub ctx: &'ctx mut FixContext,
 }
 
-impl<'a> ColonFixer<'a> {
+impl<'ctx> ColonFixer<'ctx> {
+    pub fn apply(ctx: &mut FixContext) {
+        let mut fixer = ColonFixer { ctx };
+        fixer.apply_all();
+    }
+
     pub fn apply_all(&mut self) -> String {
-        let mut output = self.input.to_string();
+        SubColonFixer::fix_missing_colons(self.ctx);
+        SubColonFixer::fix_colon_misuse(self.ctx);
 
-        output = SubColonFixer::fix_missing_colons(&output, self.steps);
-        output = SubColonFixer::fix_colon_misuse(&output, self.steps);
-
-        output
+        self.ctx.input.to_string()
     }
 }

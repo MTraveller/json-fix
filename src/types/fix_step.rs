@@ -2,7 +2,7 @@
 
 use std::fmt;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum FixStep {
     CommaDoubleRemoved,
     CommaMisalignmentFixed,
@@ -10,6 +10,7 @@ pub enum FixStep {
     CommaStrayRemoved,
     CommaChainedValueFixed,
     CommaMissingAdded,
+    CommaTrailingRemoved,
 
     ColonMissingFixed,
     ColonMisuseFixed,
@@ -53,6 +54,7 @@ impl fmt::Display for FixStep {
             FixStep::CommaStrayRemoved => "Stray comma removed",
             FixStep::CommaChainedValueFixed => "Comma-chained value fixed",
             FixStep::CommaMissingAdded => "Missing commas between pairs fixed",
+            FixStep::CommaTrailingRemoved => "Trailing comma removed",
 
             FixStep::ColonMissingFixed => "Missing colons inserted",
             FixStep::ColonMisuseFixed => "Colon misuse corrected",

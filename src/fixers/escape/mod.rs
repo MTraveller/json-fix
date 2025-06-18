@@ -4,11 +4,11 @@ pub mod fixer;
 pub mod subfixes;
 
 use crate::fixers::escape::fixer::EscapeFixer;
-use crate::types::fix_step::FixStep;
+use crate::types::fixer_context::FixContext;
 
 /// Entry point for escape-related fixes.
-/// Used by the orchestrator to run escape fixers.
-pub fn fix_escapes(input: &str, steps: &mut Vec<FixStep>) -> String {
-    let mut fixer = EscapeFixer { input, steps };
+/// Called by the orchestrator when escape issues are detected.
+pub fn fix_escapes<'a>(ctx: &mut FixContext) -> String {
+    let mut fixer = EscapeFixer { ctx };
     fixer.apply_all()
 }

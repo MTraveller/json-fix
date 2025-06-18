@@ -2,10 +2,11 @@ pub mod fixer;
 pub mod subfixes;
 
 use crate::fixers::colon::fixer::ColonFixer;
-use crate::types::fix_step::FixStep;
+use crate::types::fixer_context::FixContext;
 
 /// Entry point for colon-related fixes.
-pub fn fix_colons(input: &str, steps: &mut Vec<FixStep>) -> String {
-    let mut fixer = ColonFixer { input, steps };
+/// Called by the orchestrator when colon issues are detected.
+pub fn fix_colons<'a>(ctx: &mut FixContext) -> String {
+    let mut fixer = ColonFixer { ctx };
     fixer.apply_all()
 }

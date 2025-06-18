@@ -1,20 +1,21 @@
 // src/fixers/markdown/fixer.rs
 
 use crate::fixers::markdown::subfixes::SubMarkdownFixer;
-use crate::types::fix_step::FixStep;
+use crate::types::fixer_context::FixContext;
 
-pub struct MarkdownFixer<'a> {
-    pub input: &'a str,
-    pub steps: &'a mut Vec<FixStep>,
+pub struct MarkdownFixer<'ctx> {
+    pub ctx: &'ctx mut FixContext,
 }
 
-impl<'a> MarkdownFixer<'a> {
+impl<'ctx> MarkdownFixer<'ctx> {
     pub fn apply_all(&mut self) -> String {
-        let mut output = self.input.to_string();
+        SubMarkdownFixer::remove_markdown_wrappers(self.ctx);
+        SubMarkdownFixer::extract_json_blocks(self.ctx);
+        self.ctx.input.to_string()
+    }
 
-        output = SubMarkdownFixer::remove_markdown_wrappers(&output, self.steps);
-        output = SubMarkdownFixer::extract_json_blocks(&output, self.steps);
-
-        output
+    pub fn apply(ctx: &mut FixContext) {
+        let mut fixer = MarkdownFixer { ctx };
+        fixer.apply_all();
     }
 }

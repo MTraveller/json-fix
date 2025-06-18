@@ -7,14 +7,17 @@ src/
   diagnostics/
     array.rs
     bracket.rs
+    colon.rs
     comma.rs
     diagnostics.rs
     escape.rs
+    js_style.rs
     key.rs
     markdown.rs
     misc.rs
     mod.rs
     quote.rs
+    structure.rs
   fixers/
     arrays/
       fixer.rs
@@ -24,11 +27,19 @@ src/
       fixer.rs
       mod.rs
       subfixes.rs
+    colon/
+      fixer.rs
+      mod.rs
+      subfixes.rs
     comma/
       fixer.rs
       mod.rs
       subfixes.rs
     escape/
+      fixer.rs
+      mod.rs
+      subfixes.rs
+    js_style/
       fixer.rs
       mod.rs
       subfixes.rs
@@ -49,20 +60,33 @@ src/
       fixer.rs
       mod.rs
       subfixes.rs
+    structure/
+      fixer.rs
+      mod.rs
+      subfixes.rs
   lib.rs
   orchestrator/
     fixer.rs
     mod.rs
   types/
+    diagnostic_meta.rs
+    emotion_phase.rs
+    fix_environment.rs
     fix_report.rs
     fix_step.rs
     fixer_context.rs
+    fixer_flags.rs
     json_error.rs
     mod.rs
   utils/
+    diagnostic_utils.rs
+    json_utils.rs
+    logging_utils.rs
     mod.rs
     regex_utils.rs
+    soulfixer_utils.rs
     string_utils.rs
+    token_utils.rs
 tests/
   fix_arrays_tests.rs
   fix_brackets_tests.rs

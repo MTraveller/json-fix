@@ -1,18 +1,20 @@
 use crate::fixers::structure::subfixes::SubStructureFixer;
-use crate::types::fix_step::FixStep;
+use crate::types::fixer_context::FixContext;
 
-pub struct StructureFixer<'a> {
-    pub input: &'a str,
-    pub steps: &'a mut Vec<FixStep>,
+pub struct StructureFixer<'ctx> {
+    pub ctx: &'ctx mut FixContext,
 }
 
-impl<'a> StructureFixer<'a> {
+impl<'ctx> StructureFixer<'ctx> {
     pub fn apply_all(&mut self) -> String {
-        let mut output = self.input.to_string();
+        SubStructureFixer::fix_concatenated_json(self.ctx);
+        SubStructureFixer::fix_orphaned_braces(self.ctx);
 
-        output = SubStructureFixer::fix_concatenated_json(&output, self.steps);
-        output = SubStructureFixer::fix_orphaned_braces(&output, self.steps);
+        self.ctx.input.to_string()
+    }
 
-        output
+    pub fn apply(ctx: &mut FixContext) {
+        let mut fixer = StructureFixer { ctx };
+        fixer.apply_all();
     }
 }

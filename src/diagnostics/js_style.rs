@@ -1,7 +1,7 @@
 use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
-use regex::Regex;
+use crate::utils::regex_utils::{RE_JS_COMMENTS, RE_NAN_INFINITY, RE_UNDEFINED};
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct JSStyleDiagnostics {
     pub has_undefined: bool,
     pub has_nan: bool,
@@ -16,18 +16,15 @@ pub fn analyze_js_styles(input: &str) -> JSStyleDiagnostics {
     diag.category = DiagnosticCategory::JSStyle;
     diag.severity = DiagnosticSeverity::Warning;
 
-    let re_undefined = Regex::new(r#"(?i)\bundefined\b"#).unwrap();
-    if re_undefined.is_match(input) {
+    if RE_UNDEFINED.is_match(input) {
         diag.has_undefined = true;
     }
 
-    let re_nan_inf = Regex::new(r#"(?i)\b(NaN|Infinity|-Infinity)\b"#).unwrap();
-    if re_nan_inf.is_match(input) {
+    if RE_NAN_INFINITY.is_match(input) {
         diag.has_nan = true;
     }
 
-    let re_comments = Regex::new(r#"(?m)//.*?$|/\*[\s\S]*?\*/"#).unwrap();
-    if re_comments.is_match(input) {
+    if RE_JS_COMMENTS.is_match(input) {
         diag.has_comments = true;
     }
 

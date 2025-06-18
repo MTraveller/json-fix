@@ -1,9 +1,8 @@
 // src/diagnostics/bracket.rs
 
 use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
-use regex::Regex;
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct BracketDiagnostics {
     pub has_missing_closing: bool,
     pub has_extra_closing: bool,

@@ -2,10 +2,11 @@ pub mod fixer;
 pub mod subfixes;
 
 use crate::fixers::structure::fixer::StructureFixer;
-use crate::types::fix_step::FixStep;
+use crate::types::fixer_context::FixContext;
 
 /// Entry point for structure-related fixes.
-pub fn fix_structure(input: &str, steps: &mut Vec<FixStep>) -> String {
-    let mut fixer = StructureFixer { input, steps };
+/// Called by the orchestrator when structure issues are detected.
+pub fn fix_structure<'a>(ctx: &mut FixContext) -> String {
+    let mut fixer = StructureFixer { ctx };
     fixer.apply_all()
 }

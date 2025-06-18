@@ -7,10 +7,10 @@ pub mod types;
 pub mod utils;
 
 /// Main entrypoint to run the full fixer pipeline.
-use crate::orchestrator::fixer::apply_all_fixers;
+use crate::orchestrator::fixer::FixOrchestrator;
 use crate::types::fix_report::FixReport;
 
 /// Public API: Call this with broken JSON to receive a FixReport
 pub fn fix_json(input: &str) -> FixReport {
-    apply_all_fixers(input)
+    FixOrchestrator::apply_all(input)
 }

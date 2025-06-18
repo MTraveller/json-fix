@@ -6,81 +6,82 @@ use crate::fixers::{
     escape::fixer::EscapeFixer, keys::fixer::KeysFixer, markdown::fixer::MarkdownFixer,
     misc::fixer::MiscFixer, quotes::fixer::QuoteFixer,
 };
-use crate::types::{fix_report::FixReport, fix_step::FixStep};
+use crate::types::emotion_phase::EmotionPhase;
+use crate::types::{fix_report::FixReport, fixer_context::FixContext};
 
-pub fn apply_all_fixers(input: &str) -> FixReport {
-    let diagnostics: FixDiagnostics = analyze_all_diagnostics(input);
-    let mut steps: Vec<FixStep> = Vec::new();
-    let mut output = input.to_string();
+pub struct FixOrchestrator;
 
-    if diagnostics.has_array_issues {
-        let mut fixer = ArrayFixer {
-            input: &output,
-            steps: &mut steps,
-        };
-        output = fixer.apply_all();
+impl FixOrchestrator {
+    pub fn apply_all(input: &str) -> FixReport {
+        let diagnostics: FixDiagnostics = analyze_all_diagnostics(input);
+        let emotion_phase = EmotionPhase::Ready;
+        let mut ctx = FixContext::new(input, diagnostics.clone(), emotion_phase);
+
+        {
+            let ctx_mut = &mut ctx;
+            Self::apply_array_fixes(ctx_mut, &diagnostics);
+            Self::apply_bracket_fixes(ctx_mut, &diagnostics);
+            Self::apply_comma_fixes(ctx_mut, &diagnostics);
+            Self::apply_escape_fixes(ctx_mut, &diagnostics);
+            Self::apply_key_fixes(ctx_mut, &diagnostics);
+            Self::apply_markdown_fixes(ctx_mut, &diagnostics);
+            Self::apply_quote_fixes(ctx_mut, &diagnostics);
+            Self::apply_misc_fixes(ctx_mut, &diagnostics);
+        }
+
+        FixReport {
+            original: input.to_string(),
+            fixed: ctx.input,
+            diagnostics,
+            steps: ctx.steps.clone(),
+        }
     }
 
-    if diagnostics.has_bracket_issues {
-        let mut fixer = BracketFixer {
-            input: &output,
-            steps: &mut steps,
-        };
-        output = fixer.apply_all();
+    fn apply_array_fixes<'a>(ctx: &mut FixContext, diagnostics: &FixDiagnostics) {
+        if diagnostics.has_array_issues {
+            ArrayFixer::apply(ctx);
+        }
     }
 
-    if diagnostics.has_missing_commas {
-        let mut fixer = CommaFixer {
-            input: &output,
-            steps: &mut steps,
-        };
-        output = fixer.apply_all();
+    fn apply_bracket_fixes<'a>(ctx: &mut FixContext, diagnostics: &FixDiagnostics) {
+        if diagnostics.has_bracket_issues {
+            BracketFixer::apply(ctx);
+        }
     }
 
-    if diagnostics.has_array_issues {
-        let mut fixer = EscapeFixer {
-            input: &output,
-            steps: &mut steps,
-        };
-        output = fixer.apply_all();
+    fn apply_comma_fixes<'a>(ctx: &mut FixContext, diagnostics: &FixDiagnostics) {
+        if diagnostics.has_missing_commas {
+            CommaFixer::apply(ctx);
+        }
     }
 
-    if diagnostics.has_key_errors {
-        let mut fixer = KeysFixer {
-            input: &output,
-            steps: &mut steps,
-        };
-        output = fixer.apply_all();
+    fn apply_escape_fixes<'a>(ctx: &mut FixContext, diagnostics: &FixDiagnostics) {
+        if diagnostics.has_escape_issues {
+            EscapeFixer::apply(ctx);
+        }
     }
 
-    if diagnostics.has_markdown_wrappers {
-        let mut fixer = MarkdownFixer {
-            input: &output,
-            steps: &mut steps,
-        };
-        output = fixer.apply_all();
+    fn apply_key_fixes<'a>(ctx: &mut FixContext, diagnostics: &FixDiagnostics) {
+        if diagnostics.has_key_errors {
+            KeysFixer::apply(ctx);
+        }
     }
 
-    if diagnostics.has_quote_issues {
-        let mut fixer = QuoteFixer {
-            input: &output,
-            steps: &mut steps,
-        };
-        output = fixer.apply_all();
+    fn apply_markdown_fixes<'a>(ctx: &mut FixContext, diagnostics: &FixDiagnostics) {
+        if diagnostics.has_markdown_wrappers {
+            MarkdownFixer::apply(ctx);
+        }
     }
 
-    if diagnostics.has_misc_issues {
-        let mut fixer = MiscFixer {
-            input: &output,
-            steps: &mut steps,
-        };
-        output = fixer.apply_all();
+    fn apply_quote_fixes<'a>(ctx: &mut FixContext, diagnostics: &FixDiagnostics) {
+        if diagnostics.has_quote_issues {
+            QuoteFixer::apply(ctx);
+        }
     }
 
-    FixReport {
-        original: input.to_string(),
-        fixed: output,
-        diagnostics,
-        steps,
+    fn apply_misc_fixes<'a>(ctx: &mut FixContext, diagnostics: &FixDiagnostics) {
+        if diagnostics.has_misc_issues {
+            MiscFixer::apply(ctx);
+        }
     }
 }

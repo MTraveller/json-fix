@@ -4,11 +4,11 @@ pub mod fixer;
 pub mod subfixes;
 
 use crate::fixers::keys::fixer::KeysFixer;
-use crate::types::fix_step::FixStep;
+use crate::types::fixer_context::FixContext;
 
 /// Entry point for key-related fixes.
-/// This is what the orchestrator uses to run key fixers.
-pub fn fix_keys(input: &str, steps: &mut Vec<FixStep>) -> String {
-    let mut fixer = KeysFixer { input, steps };
+/// Called by the orchestrator when key issues are detected.
+pub fn fix_keys<'a>(ctx: &mut FixContext) -> String {
+    let mut fixer = KeysFixer { ctx };
     fixer.apply_all()
 }
