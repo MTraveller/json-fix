@@ -1,31 +1,33 @@
 // src/diagnostics/key.rs
 
-use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
-use crate::utils::regex_utils::{RE_KEY_TRAPS, RE_UNQUOTED_KEYS};
+use crate::diagnostics::Diagnoser;
+use crate::types::diagnostic_core::{DiagnosticSeverity, FixDiagnostic, FixDiagnosticKind};
 
-#[derive(Debug, Default, Clone)]
-pub struct KeyDiagnostics {
-    pub has_unquoted_keys: bool,
-    pub has_key_traps: bool,
-    pub category: DiagnosticCategory,
-    pub severity: DiagnosticSeverity,
-}
+include!("../../generated_patterns/key.rs");
 
-pub fn analyze_keys(json: &str) -> KeyDiagnostics {
-    let mut diag = KeyDiagnostics::default();
+pub struct KeyDiagnoser;
 
-    diag.category = DiagnosticCategory::Syntax;
-    diag.severity = DiagnosticSeverity::Warning;
+impl Diagnoser for KeyDiagnoser {
+    fn analyze(&self, input: &str) -> Vec<FixDiagnostic> {
+        let mut diagnostics = Vec::new();
 
-    // Detect unquoted keys (e.g., {key: "value"})
-    if RE_UNQUOTED_KEYS.is_match(json) {
-        diag.has_unquoted_keys = true;
+        let pattern_map = [
+            ("RE_UNQUOTED_KEYS", &RE_UNQUOTED_KEYS),
+            ("RE_KEY_TRAPS", &RE_KEY_TRAPS),
+        ];
+
+        for (key, regex) in pattern_map {
+            if let Some(mat) = regex.find(input) {
+                diagnostics.push(FixDiagnostic {
+                    kind: FixDiagnosticKind::Key,
+                    severity: DiagnosticSeverity::Warning,
+                    message: REGEX_DESCRIPTIONS.get(key).unwrap().to_string(),
+                    span: Some((mat.start(), mat.end())),
+                    ..Default::default()
+                });
+            }
+        }
+
+        diagnostics
     }
-
-    // Detect key traps (e.g., "emotion": , "hopeful")
-    if RE_KEY_TRAPS.is_match(json) {
-        diag.has_key_traps = true;
-    }
-
-    diag
 }

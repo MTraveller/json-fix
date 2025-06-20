@@ -3,7 +3,7 @@
 pub mod fixer;
 pub mod subfixes;
 
-use crate::fixers::quotes::fixer::QuoteFixer;
+use crate::fixers::quote::fixer::QuoteFixer;
 use crate::types::fixer_context::FixContext;
 
 /// Entry point for quote-related fixes.

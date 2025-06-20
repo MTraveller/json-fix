@@ -1,6 +1,6 @@
 // src/fixers/brackets/fixer.rs
 
-use crate::fixers::brackets::subfixes::SubBracketFixer;
+use crate::fixers::bracket::subfixes::SubBracketFixer;
 use crate::types::fixer_context::FixContext;
 
 pub struct BracketFixer<'ctx> {
@@ -9,8 +9,8 @@ pub struct BracketFixer<'ctx> {
 
 impl<'ctx> BracketFixer<'ctx> {
     pub fn apply_all(&mut self) -> String {
-        SubBracketFixer::fix_extra_closing_brace(self.ctx);
-        SubBracketFixer::fix_missing_closing_brace(self.ctx);
+        self.ctx.input = SubBracketFixer::fix_extra_closing_brace(self.ctx);
+        self.ctx.input = SubBracketFixer::fix_missing_closing_brace(self.ctx);
 
         self.ctx.input.to_string()
     }

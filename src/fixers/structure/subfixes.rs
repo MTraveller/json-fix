@@ -1,7 +1,7 @@
+use crate::generated::fix_step::FixStep;
 use crate::types::emotion_phase::EmotionPhase;
 use crate::types::fixer_context::FixContext;
 use crate::utils::soulfixer_utils::apply_fix;
-use crate::{types::fix_step::FixStep, utils::regex_utils::RE_CONCATENATED_JSON_OBJECTS};
 
 pub struct SubStructureFixer;
 
@@ -15,7 +15,7 @@ impl SubStructureFixer {
 
         apply_fix(
             ctx,
-            &RE_CONCATENATED_JSON_OBJECTS,
+            "RE_CONCATENATED_JSON_OBJECTS",
             "},{",
             FixStep::StructureConcatenatedSplit,
             "Split concatenated root JSON objects",

@@ -1,7 +1,6 @@
 // src/fixers/keys/subfixes.rs
 
 use crate::types::{emotion_phase::EmotionPhase, fix_step::FixStep, fixer_context::FixContext};
-use crate::utils::regex_utils::{RE_KEY_TRAPS, RE_UNQUOTED_KEYS};
 use crate::utils::soulfixer_utils::apply_fix;
 
 pub struct SubKeyFixer;
@@ -15,7 +14,7 @@ impl SubKeyFixer {
 
         apply_fix(
             ctx,
-            &RE_UNQUOTED_KEYS,
+            "RE_UNQUOTED_KEYS",
             "${pre}\"${key}\":",
             FixStep::KeysUnquotedFixed,
             "Added missing quotes around object keys",
@@ -30,7 +29,7 @@ impl SubKeyFixer {
 
         apply_fix(
             ctx,
-            &RE_KEY_TRAPS,
+            "RE_KEY_TRAPS",
             "\"null\"$1",
             FixStep::KeysTrapResolved,
             "Resolved problematic keys replaced with 'null'",

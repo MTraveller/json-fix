@@ -9,8 +9,8 @@ pub struct KeysFixer<'ctx> {
 
 impl<'ctx> KeysFixer<'ctx> {
     pub fn apply_all(&mut self) -> String {
-        SubKeyFixer::fix_unquoted_keys(self.ctx);
-        SubKeyFixer::fix_key_traps(self.ctx);
+        self.ctx.input = SubKeyFixer::fix_unquoted_keys(self.ctx);
+        self.ctx.input = SubKeyFixer::fix_key_traps(self.ctx);
         self.ctx.input.to_string()
     }
 

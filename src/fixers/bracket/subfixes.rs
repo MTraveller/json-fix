@@ -1,7 +1,6 @@
 // src/fixers/brackets/subfixes.rs
 
 use crate::types::{emotion_phase::EmotionPhase, fix_step::FixStep, fixer_context::FixContext};
-use crate::utils::regex_utils::RE_DOUBLE_CLOSING_BRACE;
 use crate::utils::soulfixer_utils::apply_fix;
 
 pub struct SubBracketFixer;
@@ -15,7 +14,7 @@ impl SubBracketFixer {
         }
         apply_fix(
             ctx,
-            &RE_DOUBLE_CLOSING_BRACE,
+            "RE_DOUBLE_CLOSING_BRACE",
             "}",
             FixStep::BracketsExtraRemoved,
             "Removed extra closing brace",

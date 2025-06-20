@@ -3,7 +3,7 @@
 pub mod fixer;
 pub mod subfixes;
 
-use crate::fixers::brackets::fixer::BracketFixer;
+use crate::fixers::bracket::fixer::BracketFixer;
 use crate::types::fixer_context::FixContext;
 
 /// Entry point for bracket-related fixes.

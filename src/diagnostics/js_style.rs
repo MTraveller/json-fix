@@ -1,32 +1,34 @@
-use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
-use crate::utils::regex_utils::{RE_JS_COMMENTS, RE_NAN_INFINITY, RE_UNDEFINED};
+// src/diagnostics/js_style.rs
 
-#[derive(Debug, Default, Clone)]
-pub struct JSStyleDiagnostics {
-    pub has_undefined: bool,
-    pub has_nan: bool,
-    pub has_comments: bool,
-    pub category: DiagnosticCategory,
-    pub severity: DiagnosticSeverity,
-}
+use crate::diagnostics::Diagnoser;
+use crate::types::diagnostic_core::{DiagnosticSeverity, FixDiagnostic, FixDiagnosticKind};
 
-pub fn analyze_js_styles(input: &str) -> JSStyleDiagnostics {
-    let mut diag = JSStyleDiagnostics::default();
+include!("../../generated_patterns/js_style.rs");
 
-    diag.category = DiagnosticCategory::JSStyle;
-    diag.severity = DiagnosticSeverity::Warning;
+pub struct JSStyleDiagnoser;
 
-    if RE_UNDEFINED.is_match(input) {
-        diag.has_undefined = true;
+impl Diagnoser for JSStyleDiagnoser {
+    fn analyze(&self, input: &str) -> Vec<FixDiagnostic> {
+        let mut diagnostics = Vec::new();
+
+        let pattern_map = [
+            ("RE_UNDEFINED", &RE_UNDEFINED),
+            ("RE_NAN_INFINITY", &RE_NAN_INFINITY),
+            ("RE_JS_COMMENTS", &RE_JS_COMMENTS),
+        ];
+
+        for (key, regex) in pattern_map {
+            if let Some(mat) = regex.find(input) {
+                diagnostics.push(FixDiagnostic {
+                    kind: FixDiagnosticKind::JS,
+                    severity: DiagnosticSeverity::Warning,
+                    message: REGEX_DESCRIPTIONS.get(key).unwrap().to_string(),
+                    span: Some((mat.start(), mat.end())),
+                    ..Default::default()
+                });
+            }
+        }
+
+        diagnostics
     }
-
-    if RE_NAN_INFINITY.is_match(input) {
-        diag.has_nan = true;
-    }
-
-    if RE_JS_COMMENTS.is_match(input) {
-        diag.has_comments = true;
-    }
-
-    diag
 }

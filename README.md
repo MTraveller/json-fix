@@ -23,11 +23,11 @@ It detects and fixes broken JSON strings — from misescaped quotes to missing c
 ## 🧪 Example
 
 ```rust
-use json_fix::fix_json_syntax;
+use json_fix::fix_json;
 
 fn main() {
     let broken = r#"{ "name": "Momo, "age": 3 }"#;
-    let result = fix_json_syntax(broken);
+    let result = fix_json(broken);
 
     if result.fixed != broken {
         println!("✅ Fixed JSON:\n{}", result.fixed);
@@ -59,28 +59,35 @@ let result = fix_json_syntax(broken);
 cargo run --example quick_fix
 ```
 
----
-
-## 📊 Benchmarks
-
-Run:
-
 ```bash
-cargo bench
+# Optional: regenerate regex constants from the manifest
+cargo run --bin regex_manifest_codegen
 ```
 
 ---
 
 ## 📁 Project Structure
 
-- `src/lib.rs` – Public-facing API
-- `src/fixer.rs` – Core fix logic (regex-powered)
-- `examples/quick_fix.rs` – Minimal usage demo
-- `tests/fixer.rs` – Real-world test case
-- `benches/fix_benchmark.rs` – Criterion benchmarks
+- `src/lib.rs` – Public API entrypoint
+- `src/orchestrator/` – Full diagnostic → scope → fixer execution pipeline
+- `src/diagnostics/` – Modular diagnosers powered by `FixDiagnostic` output
+- `src/fixers/` – Trait-based modular fixers with scoped `FixContext`
+- `src/meta/regex_manifest_codegen.rs` – Build tool: generates constants from manifest
+- `manifest/regex_map.ron` – One source of truth for regex patterns
+- `src/generated_patterns/` – Auto-generated constants (`Lazy<Regex>`) per category
+- `tests/` – Real-world fixer + diagnoser test suite
+- `benches/` – Criterion benchmarks
 
----
+## 📦 Manifest-Powered Regex System
 
-## ⚖️ License
+Regexes are declared once in `manifest/regex_map.ron`, then compiled into fast, type-safe constants by running:
 
-MIT – In shāʾ Allāh, may it be a source of barakah for those who use and improve it.
+```bash
+cargo run --bin regex_manifest_codegen
+```
+
+This ensures:
+
+- ✅ One source of truth
+- ✅ No runtime string-key lookups
+- ✅ All patterns are testable, traceable, and Fitrah-aligned

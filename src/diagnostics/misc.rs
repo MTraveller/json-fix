@@ -1,31 +1,33 @@
 // src/diagnostics/misc.rs
 
-use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
-use crate::utils::regex_utils::{RE_FALLBACK_ARTIFACTS, RE_NULL_SLOTS};
+use crate::diagnostics::Diagnoser;
+use crate::types::diagnostic_core::{DiagnosticSeverity, FixDiagnostic, FixDiagnosticKind};
 
-#[derive(Debug, Default, Clone)]
-pub struct MiscDiagnostics {
-    pub has_null_slots: bool,
-    pub has_fallbacks: bool,
-    pub category: DiagnosticCategory,
-    pub severity: DiagnosticSeverity,
-}
+include!("../../generated_patterns/misc.rs");
 
-pub fn analyze_misc(json: &str) -> MiscDiagnostics {
-    let mut diag = MiscDiagnostics::default();
+pub struct MiscDiagnoser;
 
-    diag.category = DiagnosticCategory::Syntax;
-    diag.severity = DiagnosticSeverity::Info;
+impl Diagnoser for MiscDiagnoser {
+    fn analyze(&self, input: &str) -> Vec<FixDiagnostic> {
+        let mut diagnostics = Vec::new();
 
-    // Detect null slots like `"key": ,` or `"key": ]` needing filling
-    if RE_NULL_SLOTS.is_match(json) {
-        diag.has_null_slots = true;
+        let pattern_map = [
+            ("RE_NULL_SLOTS", &RE_NULL_SLOTS),
+            ("RE_FALLBACK_ARTIFACTS", &RE_FALLBACK_ARTIFACTS),
+        ];
+
+        for (key, regex) in pattern_map {
+            if let Some(mat) = regex.find(input) {
+                diagnostics.push(FixDiagnostic {
+                    kind: FixDiagnosticKind::Misc,
+                    severity: DiagnosticSeverity::Info,
+                    message: REGEX_DESCRIPTIONS.get(key).unwrap().to_string(),
+                    span: Some((mat.start(), mat.end())),
+                    ..Default::default()
+                });
+            }
+        }
+
+        diagnostics
     }
-
-    // Detect fallback artifact patterns such as `, "something", ,`
-    if RE_FALLBACK_ARTIFACTS.is_match(json) {
-        diag.has_fallbacks = true;
-    }
-
-    diag
 }

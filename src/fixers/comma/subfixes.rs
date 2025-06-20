@@ -1,13 +1,8 @@
 // src/fixers/comma/fixes.rs
 
 use crate::types::emotion_phase::EmotionPhase;
-use crate::types::fix_step::FixStep;
+use crate::generated::fix_step::FixStep;
 use crate::types::fixer_context::FixContext;
-use crate::utils::regex_utils::{
-    RE_CHAINED_STRING_VALUES, RE_DOUBLE_COMMAS, RE_KEY_VALUE_MISALIGNED,
-    RE_MISSING_COMMAS_BETWEEN_PAIRS, RE_ORPHANED_STRING_VALUE, RE_STRAY_COMMA_AFTER_OPENING,
-    RE_TRAILING_COMMA_IN_ARRAY,
-};
 use crate::utils::soulfixer_utils::apply_fix;
 
 pub struct SubCommaFixer;
@@ -21,7 +16,7 @@ impl SubCommaFixer {
 
         apply_fix(
             ctx,
-            &RE_DOUBLE_COMMAS,
+            "RE_DOUBLE_COMMAS",
             ",",
             FixStep::CommaDoubleRemoved,
             "Removed double commas",
@@ -36,7 +31,7 @@ impl SubCommaFixer {
 
         apply_fix(
             ctx,
-            &RE_KEY_VALUE_MISALIGNED,
+            "RE_KEY_VALUE_MISALIGNED",
             ": null, \"",
             FixStep::CommaMisalignmentFixed,
             "Fixed misaligned key-value pairs",
@@ -51,7 +46,7 @@ impl SubCommaFixer {
 
         apply_fix(
             ctx,
-            &RE_ORPHANED_STRING_VALUE,
+            "RE_ORPHANED_STRING_VALUE",
             "null",
             FixStep::CommaOrphanedValueHandled,
             "Replaced orphaned string values with null",
@@ -66,7 +61,7 @@ impl SubCommaFixer {
 
         apply_fix(
             ctx,
-            &RE_STRAY_COMMA_AFTER_OPENING,
+            "RE_STRAY_COMMA_AFTER_OPENING",
             "$1",
             FixStep::CommaStrayRemoved,
             "Removed stray comma after opening",
@@ -81,7 +76,7 @@ impl SubCommaFixer {
 
         apply_fix(
             ctx,
-            &RE_CHAINED_STRING_VALUES,
+            "RE_CHAINED_STRING_VALUES",
             "\"chained_value\"",
             FixStep::CommaChainedValueFixed,
             "Unified chained string values",
@@ -96,7 +91,7 @@ impl SubCommaFixer {
 
         apply_fix(
             ctx,
-            &RE_MISSING_COMMAS_BETWEEN_PAIRS,
+            "RE_MISSING_COMMAS_BETWEEN_PAIRS",
             "$1, $2",
             FixStep::CommaMissingAdded,
             "Inserted missing commas between key-value pairs",
@@ -110,7 +105,7 @@ impl SubCommaFixer {
 
         apply_fix(
             ctx,
-            &RE_TRAILING_COMMA_IN_ARRAY,
+            "RE_TRAILING_COMMA_IN_ARRAY",
             "$1",
             FixStep::CommaTrailingRemoved,
             "Removed trailing comma before closing bracket/brace",

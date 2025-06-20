@@ -1,37 +1,34 @@
 // src/diagnostics/quote.rs
 
-use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
-use crate::utils::regex_utils::{RE_CURLY_QUOTES, RE_SINGLE_QUOTES, RE_SMART_QUOTES};
+use crate::diagnostics::Diagnoser;
+use crate::types::diagnostic_core::{DiagnosticSeverity, FixDiagnostic, FixDiagnosticKind};
 
-#[derive(Debug, Default, Clone)]
-pub struct QuoteDiagnostics {
-    pub has_single_quotes: bool,
-    pub has_curly_quotes: bool,
-    pub has_smart_quotes: bool,
-    pub category: DiagnosticCategory,
-    pub severity: DiagnosticSeverity,
-}
+include!("../../generated_patterns/quote.rs");
 
-pub fn analyze_quotes(json: &str) -> QuoteDiagnostics {
-    let mut diag = QuoteDiagnostics::default();
+pub struct QuoteDiagnoser;
 
-    diag.category = DiagnosticCategory::Syntax;
-    diag.severity = DiagnosticSeverity::Warning;
+impl Diagnoser for QuoteDiagnoser {
+    fn analyze(&self, input: &str) -> Vec<FixDiagnostic> {
+        let mut diagnostics = Vec::new();
 
-    // Match single-quoted keys or values
-    if RE_SINGLE_QUOTES.is_match(json) {
-        diag.has_single_quotes = true;
+        let pattern_map = [
+            ("RE_SINGLE_QUOTES", &RE_SINGLE_QUOTES),
+            ("RE_CURLY_QUOTES", &RE_CURLY_QUOTES),
+            ("RE_SMART_QUOTES", &RE_SMART_QUOTES),
+        ];
+
+        for (key, regex) in pattern_map {
+            if let Some(mat) = regex.find(input) {
+                diagnostics.push(FixDiagnostic {
+                    kind: FixDiagnosticKind::Quote,
+                    severity: DiagnosticSeverity::Warning,
+                    message: REGEX_DESCRIPTIONS.get(key).unwrap().to_string(),
+                    span: Some((mat.start(), mat.end())),
+                    ..Default::default()
+                });
+            }
+        }
+
+        diagnostics
     }
-
-    // Detect curly quotes: ‘ ’
-    if RE_CURLY_QUOTES.is_match(json) {
-        diag.has_curly_quotes = true;
-    }
-
-    // Detect smart quotes: “ ”
-    if RE_SMART_QUOTES.is_match(json) {
-        diag.has_smart_quotes = true;
-    }
-
-    diag
 }

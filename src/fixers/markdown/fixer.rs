@@ -9,8 +9,8 @@ pub struct MarkdownFixer<'ctx> {
 
 impl<'ctx> MarkdownFixer<'ctx> {
     pub fn apply_all(&mut self) -> String {
-        SubMarkdownFixer::remove_markdown_wrappers(self.ctx);
-        SubMarkdownFixer::extract_json_blocks(self.ctx);
+        self.ctx.input = SubMarkdownFixer::remove_markdown_wrappers(self.ctx);
+        self.ctx.input = SubMarkdownFixer::extract_json_blocks(self.ctx);
         self.ctx.input.to_string()
     }
 

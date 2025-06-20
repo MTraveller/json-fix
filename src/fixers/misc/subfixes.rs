@@ -1,7 +1,6 @@
 // src/fixers/misc/subfixes.rs
 
 use crate::types::{emotion_phase::EmotionPhase, fix_step::FixStep, fixer_context::FixContext};
-use crate::utils::regex_utils::{RE_FALLBACK_ARTIFACTS, RE_NULL_SLOTS};
 use crate::utils::soulfixer_utils::apply_fix;
 
 pub struct SubMiscFixer;
@@ -15,7 +14,7 @@ impl SubMiscFixer {
 
         apply_fix(
             ctx,
-            &RE_NULL_SLOTS,
+            "RE_NULL_SLOTS",
             "${1}null$2",
             FixStep::MiscNullSlotsFilled,
             "Filled empty slots with `null`",
@@ -30,7 +29,7 @@ impl SubMiscFixer {
 
         apply_fix(
             ctx,
-            &RE_FALLBACK_ARTIFACTS,
+            "RE_FALLBACK_ARTIFACTS",
             ", $1",
             FixStep::MiscFallbackApplied,
             "Fixed fallback GPT artifacts",

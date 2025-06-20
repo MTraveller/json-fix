@@ -12,8 +12,8 @@ impl<'ctx> ColonFixer<'ctx> {
     }
 
     pub fn apply_all(&mut self) -> String {
-        SubColonFixer::fix_missing_colons(self.ctx);
-        SubColonFixer::fix_colon_misuse(self.ctx);
+        self.ctx.input = SubColonFixer::fix_missing_colons(self.ctx);
+        self.ctx.input = SubColonFixer::fix_colon_misuse(self.ctx);
 
         self.ctx.input.to_string()
     }

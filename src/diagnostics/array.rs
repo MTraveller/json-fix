@@ -1,52 +1,43 @@
 // src/diagnostics/array.rs
 
-use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
-use crate::utils::regex_utils::{
-    RE_ADJACENT_STRINGS, RE_ARRAY_STRING_MISALIGN, RE_EMPTY_ARRAY_SLOTS, RE_FALLBACK_ARTIFACTS,
-    RE_MALFORMED_NESTED_ARRAYS, RE_TRAILING_COMMA_IN_ARRAY,
-};
+use crate::diagnostics::Diagnoser;
+use crate::types::diagnostic_core::{DiagnosticSeverity, FixDiagnostic, FixDiagnosticKind};
+// use crate::types::emotion_phase::EmotionPhase;
+// use crate::types::fixer_context::FixContext;
+// use crate::utils::souldiag_utils::apply_diagnosis;
 
-#[derive(Debug, Default, Clone)]
-pub struct ArrayDiagnostics {
-    pub has_trailing_commas: bool,
-    pub has_malformed_nesting: bool,
-    pub has_empty_array_slots: bool,
-    pub has_misaligned_strings: bool,
-    pub has_adjacent_strings: bool,
-    pub has_fallback_artifacts: bool,
-    pub category: DiagnosticCategory,
-    pub severity: DiagnosticSeverity,
-}
+include!("../../generated_patterns/array.rs");
 
-pub fn analyze_arrays(json: &str) -> ArrayDiagnostics {
-    let mut diag = ArrayDiagnostics::default();
+/// Modular diagnoser for array-related syntax issues.
+/// This is the Fitrah-aligned version using the Diagnoser trait.
+pub struct ArrayDiagnoser;
 
-    diag.category = DiagnosticCategory::Syntax;
-    diag.severity = DiagnosticSeverity::Warning;
+impl Diagnoser for ArrayDiagnoser {
+    fn analyze(&self, input: &str) -> Vec<FixDiagnostic> {
+        let mut diagnostics = Vec::new();
 
-    if RE_TRAILING_COMMA_IN_ARRAY.is_match(json) {
-        diag.has_trailing_commas = true;
+        let pattern_map = [
+            ("RE_TRAILING_COMMA_IN_ARRAY", &RE_TRAILING_COMMA_IN_ARRAY),
+            ("RE_MALFORMED_NESTED_ARRAYS", &RE_MALFORMED_NESTED_ARRAYS),
+            ("RE_EMPTY_ARRAY_SLOTS", &RE_EMPTY_ARRAY_SLOTS),
+            ("RE_ARRAY_STRING_MISALIGN", &RE_ARRAY_STRING_MISALIGN),
+            ("RE_ADJACENT_STRINGS", &RE_ADJACENT_STRINGS),
+            ("RE_FALLBACK_ARTIFACTS", &RE_FALLBACK_ARTIFACTS),
+            ("RE_LEADING_COMMA_IN_ARRAY", &RE_LEADING_COMMA_IN_ARRAY),
+        ];
+
+        for (key, regex) in pattern_map {
+            if let Some(mat) = regex.find(input) {
+                diagnostics.push(FixDiagnostic {
+                    kind: FixDiagnosticKind::Array,
+                    severity: DiagnosticSeverity::Warning,
+                    message: REGEX_DESCRIPTIONS.get(key).unwrap().to_string(),
+                    regex_key: key.to_string(),
+                    span: Some((mat.start(), mat.end())),
+                });
+            }
+        }
+
+        diagnostics
     }
-
-    if RE_MALFORMED_NESTED_ARRAYS.is_match(json) {
-        diag.has_malformed_nesting = true;
-    }
-
-    if RE_EMPTY_ARRAY_SLOTS.is_match(json) {
-        diag.has_empty_array_slots = true;
-    }
-
-    if RE_ARRAY_STRING_MISALIGN.is_match(json) {
-        diag.has_misaligned_strings = true;
-    }
-
-    if RE_ADJACENT_STRINGS.is_match(json) {
-        diag.has_adjacent_strings = true;
-    }
-
-    if RE_FALLBACK_ARTIFACTS.is_match(json) {
-        diag.has_fallback_artifacts = true;
-    }
-
-    diag
 }

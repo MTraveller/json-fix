@@ -9,13 +9,13 @@ pub struct CommaFixer<'ctx> {
 
 impl<'ctx> CommaFixer<'ctx> {
     pub fn apply_all(&mut self) -> String {
-        SubCommaFixer::fix_double_commas(self.ctx);
-        SubCommaFixer::fix_misaligned_key_value(self.ctx);
-        SubCommaFixer::fix_orphaned_values(self.ctx);
-        SubCommaFixer::fix_stray_commas(self.ctx);
-        SubCommaFixer::fix_chained_values(self.ctx);
-        SubCommaFixer::fix_missing_commas_between_pairs(self.ctx);
-        SubCommaFixer::fix_trailing_commas(self.ctx);
+        self.ctx.input = SubCommaFixer::fix_double_commas(self.ctx);
+        self.ctx.input = SubCommaFixer::fix_misaligned_key_value(self.ctx);
+        self.ctx.input = SubCommaFixer::fix_orphaned_values(self.ctx);
+        self.ctx.input = SubCommaFixer::fix_stray_commas(self.ctx);
+        self.ctx.input = SubCommaFixer::fix_chained_values(self.ctx);
+        self.ctx.input = SubCommaFixer::fix_missing_commas_between_pairs(self.ctx);
+        self.ctx.input = SubCommaFixer::fix_trailing_commas(self.ctx);
 
         self.ctx.input.to_string()
     }

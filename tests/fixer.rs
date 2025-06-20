@@ -50,3 +50,15 @@ fn test_fix_stray_comma_after_opening() {
 
     assert_eq!(ctx.input, r#"["a", "b"]"#);
 }
+
+#[test]
+fn test_fix_comma_before_closing() {
+    let input = r#"["a", "b",]"#;
+    let diagnostics = analyze_all_diagnostics(input);
+    let emotion_phase = EmotionPhase::Ready;
+    let mut ctx = FixContext::new(input, diagnostics.clone(), emotion_phase);
+
+    CommaFixer::apply(&mut ctx);
+
+    assert_eq!(ctx.input, r#"["a", "b"]"#);
+}

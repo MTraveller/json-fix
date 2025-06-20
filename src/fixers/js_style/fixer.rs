@@ -7,9 +7,9 @@ pub struct JsStyleFixer<'ctx> {
 
 impl<'ctx> JsStyleFixer<'ctx> {
     pub fn apply_all(&mut self) -> String {
-        SubJsStyleFixer::fix_undefined(self.ctx);
-        SubJsStyleFixer::fix_nan(self.ctx);
-        SubJsStyleFixer::remove_js_comments(self.ctx);
+        self.ctx.input = SubJsStyleFixer::fix_undefined(self.ctx);
+        self.ctx.input = SubJsStyleFixer::fix_nan(self.ctx);
+        self.ctx.input = SubJsStyleFixer::remove_js_comments(self.ctx);
 
         self.ctx.input.to_string()
     }

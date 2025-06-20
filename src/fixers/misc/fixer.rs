@@ -9,8 +9,8 @@ pub struct MiscFixer<'ctx> {
 
 impl<'ctx> MiscFixer<'ctx> {
     pub fn apply_all(&mut self) -> String {
-        SubMiscFixer::fix_null_slots(self.ctx);
-        SubMiscFixer::fix_fallback_artifacts(self.ctx);
+        self.ctx.input = SubMiscFixer::fix_null_slots(self.ctx);
+        self.ctx.input = SubMiscFixer::fix_fallback_artifacts(self.ctx);
 
         self.ctx.input.to_string()
     }

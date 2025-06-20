@@ -7,8 +7,8 @@ pub struct StructureFixer<'ctx> {
 
 impl<'ctx> StructureFixer<'ctx> {
     pub fn apply_all(&mut self) -> String {
-        SubStructureFixer::fix_concatenated_json(self.ctx);
-        SubStructureFixer::fix_orphaned_braces(self.ctx);
+        self.ctx.input = SubStructureFixer::fix_concatenated_json(self.ctx);
+        self.ctx.input = SubStructureFixer::fix_orphaned_braces(self.ctx);
 
         self.ctx.input.to_string()
     }

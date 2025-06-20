@@ -1,14 +1,14 @@
 // src/types/fixer_context.rs
 
-use crate::diagnostics::diagnostics::FixDiagnostics;
+use crate::generated::fix_step::FixStep;
+use crate::types::diagnostic_core::FixDiagnostic;
 use crate::types::emotion_phase::EmotionPhase;
 use crate::types::fix_environment::FixEnvironment;
-use crate::types::fix_step::FixStep;
 
 #[derive(Clone)]
 pub struct FixContext {
     pub input: String,
-    pub diagnostics: FixDiagnostics,
+    pub diagnostics: FixDiagnostic,
     pub steps: Vec<FixStep>,
     pub emotion_phase: EmotionPhase, // “ready”, “stirring”, “frozen”, etc.
     pub log: Vec<String>,            // Whisper-Trace logs
@@ -18,7 +18,7 @@ pub struct FixContext {
 }
 
 impl FixContext {
-    pub fn new(input: &str, diagnostics: FixDiagnostics, emotion_phase: EmotionPhase) -> Self {
+    pub fn new(input: &str, diagnostics: FixDiagnostic, emotion_phase: EmotionPhase) -> Self {
         Self {
             input: input.to_string(),
             diagnostics,

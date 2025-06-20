@@ -1,13 +1,16 @@
 // src/fixers/mod.rs
 
-pub mod arrays;
-pub mod brackets;
+pub mod array;
+pub mod bracket;
 pub mod colon;
 pub mod comma;
 pub mod escape;
+pub mod fixer;
 pub mod js_style;
 pub mod keys;
 pub mod markdown;
 pub mod misc;
-pub mod quotes;
+pub mod quote;
 pub mod structure;
+
+pub use fixer::Fixer;

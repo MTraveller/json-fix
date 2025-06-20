@@ -1,47 +1,39 @@
 // src/diagnostics/comma.rs
 
-use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
-use crate::utils::regex_utils::{
-    RE_DOUBLE_COMMAS, RE_FALLBACK_ARTIFACTS, RE_KEY_VALUE_MISALIGNED, RE_ORPHANED_STRING_VALUE,
-    RE_STRAY_COMMA_AFTER_OPENING,
-};
+use crate::diagnostics::Diagnoser;
+use crate::types::diagnostic_core::{DiagnosticSeverity, FixDiagnostic, FixDiagnosticKind};
 
-#[derive(Debug, Default, Clone)]
-pub struct CommaDiagnostics {
-    pub has_double_commas: bool,
-    pub has_orphaned_values: bool,
-    pub has_key_value_misalignment: bool,
-    pub has_stray_commas: bool,
-    pub has_comma_value_chaining: bool,
-    pub category: DiagnosticCategory,
-    pub severity: DiagnosticSeverity,
-}
+include!("../../generated_patterns/comma.rs");
 
-pub fn analyze_commas(json: &str) -> CommaDiagnostics {
-    let mut diag = CommaDiagnostics::default();
+pub struct CommaDiagnoser;
 
-    diag.category = DiagnosticCategory::Syntax;
-    diag.severity = DiagnosticSeverity::Warning;
+impl Diagnoser for CommaDiagnoser {
+    fn analyze(&self, input: &str) -> Vec<FixDiagnostic> {
+        let mut diagnostics = Vec::new();
 
-    if RE_DOUBLE_COMMAS.is_match(json) {
-        diag.has_double_commas = true;
+        let pattern_map = [
+            ("RE_DOUBLE_COMMAS", &RE_DOUBLE_COMMAS),
+            ("RE_KEY_VALUE_MISALIGNED", &RE_KEY_VALUE_MISALIGNED),
+            ("RE_ORPHANED_STRING_VALUE", &RE_ORPHANED_STRING_VALUE),
+            (
+                "RE_STRAY_COMMA_AFTER_OPENING",
+                &RE_STRAY_COMMA_AFTER_OPENING,
+            ),
+            ("RE_FALLBACK_ARTIFACTS", &RE_FALLBACK_ARTIFACTS),
+        ];
+
+        for (key, regex) in pattern_map {
+            if let Some(mat) = regex.find(input) {
+                diagnostics.push(FixDiagnostic {
+                    kind: FixDiagnosticKind::Comma,
+                    severity: DiagnosticSeverity::Warning,
+                    message: REGEX_DESCRIPTIONS.get(key).unwrap().to_string(),
+                    span: Some((mat.start(), mat.end())),
+                    ..Default::default()
+                });
+            }
+        }
+
+        diagnostics
     }
-
-    if RE_KEY_VALUE_MISALIGNED.is_match(json) {
-        diag.has_key_value_misalignment = true;
-    }
-
-    if RE_ORPHANED_STRING_VALUE.is_match(json) {
-        diag.has_orphaned_values = true;
-    }
-
-    if RE_STRAY_COMMA_AFTER_OPENING.is_match(json) {
-        diag.has_stray_commas = true;
-    }
-
-    if RE_FALLBACK_ARTIFACTS.is_match(json) {
-        diag.has_comma_value_chaining = true;
-    }
-
-    diag
 }

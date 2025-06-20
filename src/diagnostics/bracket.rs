@@ -1,52 +1,65 @@
 // src/diagnostics/bracket.rs
 
-use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
+use crate::diagnostics::Diagnoser;
+use crate::types::diagnostic_core::{DiagnosticSeverity, FixDiagnostic, FixDiagnosticKind};
+use crate::utils::span_utils::estimate_bracket_span;
 
-#[derive(Debug, Default, Clone)]
-pub struct BracketDiagnostics {
-    pub has_missing_closing: bool,
-    pub has_extra_closing: bool,
-    pub has_unbalanced_pairs: bool,
-    pub category: DiagnosticCategory,
-    pub severity: DiagnosticSeverity,
-}
+pub struct BracketDiagnoser;
 
-pub fn analyze_brackets(json: &str) -> BracketDiagnostics {
-    let mut diag = BracketDiagnostics::default();
+impl Diagnoser for BracketDiagnoser {
+    fn analyze(&self, input: &str) -> Vec<FixDiagnostic> {
+        let mut diagnostics = Vec::new();
+        let mut curly = 0;
+        let mut square = 0;
+        let mut has_extra = false;
+        let mut has_missing = false;
 
-    diag.category = DiagnosticCategory::Structural;
-    diag.severity = DiagnosticSeverity::Error;
-
-    let mut curly = 0;
-    let mut square = 0;
-
-    for ch in json.chars() {
-        match ch {
-            '{' => curly += 1,
-            '}' => {
-                if curly == 0 {
-                    diag.has_extra_closing = true;
-                } else {
-                    curly -= 1;
+        for ch in input.chars() {
+            match ch {
+                '{' => curly += 1,
+                '}' => {
+                    if curly == 0 {
+                        has_extra = true;
+                    } else {
+                        curly -= 1;
+                    }
                 }
-            }
-            '[' => square += 1,
-            ']' => {
-                if square == 0 {
-                    diag.has_extra_closing = true;
-                } else {
-                    square -= 1;
+                '[' => square += 1,
+                ']' => {
+                    if square == 0 {
+                        has_extra = true;
+                    } else {
+                        square -= 1;
+                    }
                 }
+                _ => {}
             }
-            _ => {}
         }
+
+        if curly > 0 || square > 0 {
+            has_missing = true;
+        }
+
+        if has_extra {
+            diagnostics.push(FixDiagnostic {
+                kind: FixDiagnosticKind::Bracket,
+                severity: DiagnosticSeverity::Error,
+                message: "Extra closing bracket found".to_string(),
+                span: estimate_bracket_span(input, false),
+                ..Default::default()
+            });
+        }
+
+        if has_missing {
+            diagnostics.push(FixDiagnostic {
+                kind: FixDiagnosticKind::Bracket,
+                severity: DiagnosticSeverity::Error,
+                message: "Missing closing bracket detected".to_string(),
+                span: estimate_bracket_span(input, true),
+                ..Default::default()
+            });
+        }
+
+        diagnostics
     }
-
-    if curly > 0 || square > 0 {
-        diag.has_missing_closing = true;
-    }
-
-    diag.has_unbalanced_pairs = diag.has_missing_closing || diag.has_extra_closing;
-
-    diag
 }

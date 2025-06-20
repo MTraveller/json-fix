@@ -1,9 +1,8 @@
 // src/fixers/escape/subfixes.rs
 
 use crate::types::emotion_phase::EmotionPhase;
-use crate::types::fix_step::FixStep;
+use crate::generated::fix_step::FixStep;
 use crate::types::fixer_context::FixContext;
-use crate::utils::regex_utils::{RE_BROKEN_UNICODE_ESCAPES, RE_INVALID_ESCAPES};
 use crate::utils::soulfixer_utils::apply_fix;
 
 pub struct SubEscapeFixer;
@@ -18,7 +17,7 @@ impl SubEscapeFixer {
 
         apply_fix(
             ctx,
-            &RE_INVALID_ESCAPES,
+            "RE_INVALID_ESCAPES",
             "",
             FixStep::EscapeInvalidRemoved,
             "Removed invalid escape sequences",
@@ -34,7 +33,7 @@ impl SubEscapeFixer {
 
         apply_fix(
             ctx,
-            &RE_BROKEN_UNICODE_ESCAPES,
+            "RE_BROKEN_UNICODE_ESCAPES",
             "\\uFFFD",
             FixStep::EscapeUnicodeRepaired,
             "Replaced broken unicode escapes with replacement character",

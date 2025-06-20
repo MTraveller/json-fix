@@ -1,32 +1,33 @@
 // src/diagnostics/colon.rs
 
-use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
-use crate::utils::regex_utils::{RE_DOUBLE_COLON, RE_MISSING_COLON};
+use crate::diagnostics::Diagnoser;
+use crate::types::diagnostic_core::{DiagnosticSeverity, FixDiagnostic, FixDiagnosticKind};
 
-#[derive(Debug, Default, Clone)]
-pub struct ColonDiagnostics {
-    pub has_missing_colons: bool,
-    pub has_colon_misuse: bool,
-    pub category: DiagnosticCategory,
-    pub severity: DiagnosticSeverity,
-}
+include!("../../generated_patterns/colon.rs");
 
-pub fn analyze_colons(input: &str) -> ColonDiagnostics {
-    let mut diag = ColonDiagnostics::default();
+pub struct ColonDiagnoser;
 
-    diag.category = DiagnosticCategory::Syntax;
-    diag.severity = DiagnosticSeverity::Error;
+impl Diagnoser for ColonDiagnoser {
+    fn analyze(&self, input: &str) -> Vec<FixDiagnostic> {
+        let mut diagnostics = Vec::new();
 
-    // Detect missing colons between key-value pairs
-    // e.g. "key" "value" or "key" 123
-    if RE_MISSING_COLON.is_match(input) {
-        diag.has_missing_colons = true;
+        let pattern_map = [
+            ("RE_MISSING_COLON", &RE_MISSING_COLON),
+            ("RE_DOUBLE_COLON", &RE_DOUBLE_COLON),
+        ];
+
+        for (key, regex) in pattern_map {
+            if let Some(mat) = regex.find(input) {
+                diagnostics.push(FixDiagnostic {
+                    kind: FixDiagnosticKind::Colon,
+                    severity: DiagnosticSeverity::Error,
+                    message: REGEX_DESCRIPTIONS.get(key).unwrap().to_string(),
+                    span: Some((mat.start(), mat.end())),
+                    ..Default::default()
+                });
+            }
+        }
+
+        diagnostics
     }
-
-    // Detect invalid colon usage like "::"
-    if RE_DOUBLE_COLON.is_match(input) {
-        diag.has_colon_misuse = true;
-    }
-
-    diag
 }

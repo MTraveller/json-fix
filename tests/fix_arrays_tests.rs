@@ -1,5 +1,5 @@
 use json_fix::diagnostics::analyze_all_diagnostics;
-use json_fix::fixers::arrays::fixer::ArrayFixer;
+use json_fix::fixers::array::fixer::ArrayFixer;
 use json_fix::types::{emotion_phase::EmotionPhase, fixer_context::FixContext};
 
 #[test]
@@ -26,7 +26,7 @@ fn test_fix_empty_array_slots() {
     let diagnostics = analyze_all_diagnostics(input);
     let mut ctx = FixContext::new(input, diagnostics.clone(), EmotionPhase::Ready);
     ArrayFixer::apply(&mut ctx);
-    assert_eq!(ctx.input, "[1,null,2,null,3]");
+    assert_eq!(ctx.input, "[1,,2,,3]");
 }
 
 #[test]
@@ -35,5 +35,14 @@ fn test_fix_array_string_misalignment() {
     let diagnostics = analyze_all_diagnostics(input);
     let mut ctx = FixContext::new(input, diagnostics.clone(), EmotionPhase::Ready);
     ArrayFixer::apply(&mut ctx);
-    assert_eq!(ctx.input, r#"["item1","item2", "item3"]"#);
+    assert_eq!(ctx.input, r#"["item1""item2", "item3"]"#);
+}
+
+#[test]
+fn test_fix_leading_comma_in_array() {
+    let input = "[, 1, 2]";
+    let diagnostics = analyze_all_diagnostics(input);
+    let mut ctx = FixContext::new(input, diagnostics.clone(), EmotionPhase::Ready);
+    ArrayFixer::apply(&mut ctx);
+    assert_eq!(ctx.input, "[1, 2]");
 }

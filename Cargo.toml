@@ -9,13 +9,44 @@ categories = ["data-structures", "parsing", "text-processing"]
 keywords = ["json", "repair", "ai", "fix", "parser"]
 documentation = "https://docs.rs/json-fix"
 
+include = [
+    "src/**",
+    "manifest/regex_map.ron",
+    "Cargo.toml",
+    "README.md",
+    "LICENSE"
+]
+
+# 🧪 Analyzer: Runs all diagnosers on a given JSON input for testing and debugging.
+[[bin]]
+name = "analyzer"
+path = "src/bin/analyzer.rs"
+
+# 🧬 Regex Manifest Codegen: Generates strongly typed regex constants from the manifest.
+[[bin]]
+name = "regex_manifest_codegen"
+path = "src/meta/regex_manifest_codegen.rs"
+
+# 🧱 Fixer Macro Codegen: Auto-generates fixer struct macros per domain from diagnostic_manifest.ron.
+[[bin]]
+name = "fixer_macro_codegen"
+path = "src/bin/fixer_macro_codegen.rs"
+
+# 🧾 Diagnostic Codegen: Generates the FixStep enum and description mappings.
+[[bin]]
+name = "diagnostic_codegen"
+path = "src/meta/diagnostic_codegen.rs"
+
 [dependencies]
+anyhow = "1.0.98"
 chrono = "0.4.41"
 fancy-regex = "0.14.0"
 once_cell = "1.17.1"
 regex = "1.11.1"
+ron = "0.10.1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+walkdir = "2.5.0"
 
 [features]
 default = ["standard"]
@@ -23,4 +54,5 @@ standard = []
 aggressive = []
 
 [dev-dependencies]
+
 

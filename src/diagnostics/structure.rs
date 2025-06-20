@@ -1,33 +1,37 @@
 // src/diagnostics/structure.rs
 
-use crate::types::diagnostic_meta::{DiagnosticCategory, DiagnosticSeverity};
-use crate::utils::regex_utils::{
-    RE_CONCATENATED_JSON_OBJECTS, RE_ORPHANED_CLOSE_BRACE, RE_ORPHANED_OPEN_BRACE,
-};
+use crate::diagnostics::Diagnoser;
+use crate::types::diagnostic_core::{DiagnosticSeverity, FixDiagnostic, FixDiagnosticKind};
 
-#[derive(Debug, Default, Clone)]
-pub struct StructureDiagnostics {
-    pub has_concatenated_json: bool,
-    pub has_orphaned_braces: bool,
-    pub category: DiagnosticCategory,
-    pub severity: DiagnosticSeverity,
-}
+include!("../../generated_patterns/structure.rs");
 
-pub fn analyze_structure(input: &str) -> StructureDiagnostics {
-    let mut diag = StructureDiagnostics::default();
+pub struct StructureDiagnoser;
 
-    diag.category = DiagnosticCategory::Structural;
-    diag.severity = DiagnosticSeverity::Error;
+impl Diagnoser for StructureDiagnoser {
+    fn analyze(&self, input: &str) -> Vec<FixDiagnostic> {
+        let mut diagnostics = Vec::new();
 
-    // Detects if multiple root-level JSON objects are concatenated without a comma or array
-    if RE_CONCATENATED_JSON_OBJECTS.is_match(input) {
-        diag.has_concatenated_json = true;
+        let pattern_map = [
+            (
+                "RE_CONCATENATED_JSON_OBJECTS",
+                &RE_CONCATENATED_JSON_OBJECTS,
+            ),
+            ("RE_ORPHANED_OPEN_BRACE", &RE_ORPHANED_OPEN_BRACE),
+            ("RE_ORPHANED_CLOSE_BRACE", &RE_ORPHANED_CLOSE_BRACE),
+        ];
+
+        for (key, regex) in pattern_map {
+            for mat in regex.find_iter(input) {
+                diagnostics.push(FixDiagnostic {
+                    kind: FixDiagnosticKind::Structure,
+                    severity: DiagnosticSeverity::Error,
+                    message: REGEX_DESCRIPTIONS.get(key).unwrap().to_string(),
+                    span: Some((mat.start(), mat.end())),
+                    ..Default::default()
+                });
+            }
+        }
+
+        diagnostics
     }
-
-    // Detect potential brace imbalance via regex match rather than just count
-    if RE_ORPHANED_OPEN_BRACE.is_match(input) || RE_ORPHANED_CLOSE_BRACE.is_match(input) {
-        diag.has_orphaned_braces = true;
-    }
-
-    diag
 }

@@ -1,5 +1,4 @@
 use crate::types::{emotion_phase::EmotionPhase, fix_step::FixStep, fixer_context::FixContext};
-use crate::utils::regex_utils::{RE_DOUBLE_COLON, RE_MISSING_COLON};
 use crate::utils::soulfixer_utils::apply_fix;
 
 pub struct SubColonFixer;
@@ -14,7 +13,7 @@ impl SubColonFixer {
 
         apply_fix(
             ctx,
-            &RE_MISSING_COLON,
+            "RE_MISSING_COLON",
             r#""$1": $2"#,
             FixStep::ColonMissingFixed,
             "Inserted missing colon between key and value",
@@ -30,7 +29,7 @@ impl SubColonFixer {
 
         apply_fix(
             ctx,
-            &RE_DOUBLE_COLON,
+            "RE_DOUBLE_COLON",
             ":",
             FixStep::ColonMisuseFixed,
             "Replaced double colon with single",

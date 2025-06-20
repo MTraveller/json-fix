@@ -1,7 +1,6 @@
 // src/fixers/quotes/subfixes.rs
 
 use crate::types::{emotion_phase::EmotionPhase, fix_step::FixStep, fixer_context::FixContext};
-use crate::utils::regex_utils::RE_SINGLE_QUOTES;
 use crate::utils::soulfixer_utils::apply_fix;
 
 pub struct SubQuotesFixer;
@@ -15,7 +14,7 @@ impl SubQuotesFixer {
 
         apply_fix(
             ctx,
-            &RE_SINGLE_QUOTES,
+            "RE_SINGLE_QUOTES",
             r#""$1""#,
             FixStep::QuotesSingleConverted,
             "Converted single quotes to standard double quotes",

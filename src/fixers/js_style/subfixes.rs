@@ -1,7 +1,6 @@
 // src/fixers/js_style/subfixes.rs
 
 use crate::types::{emotion_phase::EmotionPhase, fix_step::FixStep, fixer_context::FixContext};
-use crate::utils::regex_utils::{RE_JS_COMMENTS, RE_NAN_INFINITY, RE_UNDEFINED};
 use crate::utils::soulfixer_utils::apply_fix;
 
 pub struct SubJsStyleFixer;
@@ -16,7 +15,7 @@ impl SubJsStyleFixer {
 
         apply_fix(
             ctx,
-            &RE_UNDEFINED,
+            "RE_UNDEFINED",
             "null",
             FixStep::JsUndefinedReplaced,
             "Replaced `undefined` with `null`",
@@ -32,7 +31,7 @@ impl SubJsStyleFixer {
 
         apply_fix(
             ctx,
-            &RE_NAN_INFINITY,
+            "RE_NAN_INFINITY",
             "null",
             FixStep::JsNaNReplaced,
             "Replaced `NaN` and `Infinity` with `null`",
@@ -48,7 +47,7 @@ impl SubJsStyleFixer {
 
         apply_fix(
             ctx,
-            &RE_JS_COMMENTS,
+            "RE_JS_COMMENTS",
             "",
             FixStep::JsCommentsRemoved,
             "Removed JavaScript-style comments",

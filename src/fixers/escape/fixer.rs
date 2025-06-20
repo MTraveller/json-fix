@@ -9,8 +9,8 @@ pub struct EscapeFixer<'ctx> {
 
 impl<'ctx> EscapeFixer<'ctx> {
     pub fn apply_all(&mut self) -> String {
-        SubEscapeFixer::fix_invalid_escapes(self.ctx);
-        SubEscapeFixer::fix_broken_unicode(self.ctx);
+        self.ctx.input = SubEscapeFixer::fix_invalid_escapes(self.ctx);
+        self.ctx.input = SubEscapeFixer::fix_broken_unicode(self.ctx);
 
         self.ctx.input.to_string()
     }

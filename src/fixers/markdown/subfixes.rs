@@ -1,7 +1,6 @@
 // src/fixers/markdown/subfixes.rs
 
 use crate::types::{emotion_phase::EmotionPhase, fix_step::FixStep, fixer_context::FixContext};
-use crate::utils::regex_utils::{RE_MARKDOWN_JSON_BLOCK, RE_MARKDOWN_WRAPPER};
 use crate::utils::soulfixer_utils::apply_fix;
 
 pub struct SubMarkdownFixer;
@@ -16,7 +15,7 @@ impl SubMarkdownFixer {
 
         apply_fix(
             ctx,
-            &RE_MARKDOWN_WRAPPER,
+            "RE_MARKDOWN_WRAPPER",
             "$1",
             FixStep::MarkdownWrapperRemoved,
             "Removed Markdown code wrapper",
@@ -32,7 +31,7 @@ impl SubMarkdownFixer {
 
         apply_fix(
             ctx,
-            &RE_MARKDOWN_JSON_BLOCK,
+            "RE_MARKDOWN_JSON_BLOCK",
             "$1",
             FixStep::MarkdownJsonExtracted,
             "Extracted JSON block from Markdown",

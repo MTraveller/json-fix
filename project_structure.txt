@@ -2,8 +2,15 @@ Cargo.lock
 Cargo.toml
 LICENSE
 README.md
+diagnostics/
+  fix_map.md
+manifest/
+  diagnostic_manifest.ron
+  regex_map.ron
 project_structure.txt
 src/
+  bin/
+    fixer_map_generator.rs
   diagnostics/
     array.rs
     bracket.rs
@@ -39,6 +46,7 @@ src/
       fixer.rs
       mod.rs
       subfixes.rs
+    fixer.rs
     js_style/
       fixer.rs
       mod.rs
@@ -65,25 +73,35 @@ src/
       mod.rs
       subfixes.rs
   lib.rs
+  meta/
+    diagnostic_manifest_loader.rs
+    mod.rs
   orchestrator/
-    fixer.rs
+    diag_commander.rs
+    fix_commander.rs
+    fix_runner.rs
+    fixer_legacy.rs
     mod.rs
   types/
-    diagnostic_meta.rs
+    diagnostic_core.rs
     emotion_phase.rs
     fix_environment.rs
     fix_report.rs
+    fix_scope.rs
     fix_step.rs
     fixer_context.rs
     fixer_flags.rs
     json_error.rs
+    manifest.rs
     mod.rs
   utils/
     diagnostic_utils.rs
+    fancy_regex_utils.rs
     json_utils.rs
     logging_utils.rs
     mod.rs
-    regex_utils.rs
+    regex_loader.rs
+    souldiag_utils.rs
     soulfixer_utils.rs
     string_utils.rs
     token_utils.rs
