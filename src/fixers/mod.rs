@@ -7,7 +7,7 @@ pub mod comma;
 pub mod escape;
 pub mod fixer;
 pub mod js_style;
-pub mod keys;
+pub mod key;
 pub mod markdown;
 pub mod misc;
 pub mod quote;

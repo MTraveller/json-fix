@@ -1,9 +1,8 @@
 // src/diagnostics/key.rs
 
 use crate::diagnostics::Diagnoser;
+use crate::generated_patterns::regex::*;
 use crate::types::diagnostic_core::{DiagnosticSeverity, FixDiagnostic, FixDiagnosticKind};
-
-include!("../../generated_patterns/key.rs");
 
 pub struct KeyDiagnoser;
 

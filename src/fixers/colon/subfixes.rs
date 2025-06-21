@@ -1,3 +1,4 @@
+use crate::types::fix_scope::{FixScope, ScopeCategory};
 use crate::types::{emotion_phase::EmotionPhase, fix_step::FixStep, fixer_context::FixContext};
 use crate::utils::soulfixer_utils::apply_fix;
 
@@ -5,9 +6,14 @@ pub struct SubColonFixer;
 
 impl SubColonFixer {
     /// Fixes missing colons between keys and values
-    pub fn fix_missing_colons(ctx: &mut FixContext) -> String {
+    pub fn fix_missing_colons(ctx: &mut FixContext, scope: &mut FixScope) -> String {
         if ctx.emotion_phase == EmotionPhase::Frozen {
             ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_missing_colons.");
+            return ctx.input.to_string();
+        }
+
+        if !scope.allows(ScopeCategory::Colon) {
+            ctx.whisper("FixScope excludes Colon: skipping fix_missing_colons.");
             return ctx.input.to_string();
         }
 
@@ -21,9 +27,14 @@ impl SubColonFixer {
     }
 
     /// Fixes misuse of colons (e.g., double colons)
-    pub fn fix_colon_misuse(ctx: &mut FixContext) -> String {
+    pub fn fix_colon_misuse(ctx: &mut FixContext, scope: &mut FixScope) -> String {
         if ctx.emotion_phase == EmotionPhase::Frozen {
             ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_colon_misuse.");
+            return ctx.input.to_string();
+        }
+
+        if !scope.allows(ScopeCategory::Colon) {
+            ctx.whisper("FixScope excludes Colon: skipping fix_colon_misuse.");
             return ctx.input.to_string();
         }
 

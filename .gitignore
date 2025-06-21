@@ -32,7 +32,6 @@ criterion/
 *.bak
 *.old
 /diagnostics/
-/generated_patterns/
 
 # Examples or local debug output
 examples/output.json

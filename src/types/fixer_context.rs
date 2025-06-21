@@ -1,9 +1,9 @@
 // src/types/fixer_context.rs
 
-use crate::generated::fix_step::FixStep;
 use crate::types::diagnostic_core::FixDiagnostic;
 use crate::types::emotion_phase::EmotionPhase;
 use crate::types::fix_environment::FixEnvironment;
+use crate::types::fix_step::FixStep;
 
 #[derive(Clone)]
 pub struct FixContext {

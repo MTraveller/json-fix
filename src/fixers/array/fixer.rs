@@ -33,7 +33,7 @@ impl<'ctx> ArrayFixer<'ctx> {
 
     /// Initializes an ArrayFixer and applies it directly to the given context.
     pub fn apply(ctx: &mut FixContext) -> FixOutcome {
-        let scope = FixScope::new(&ctx.input, &[ScopeCategory::Array]);
+        let scope = FixScope::new(&ctx.input, &[ScopeCategory::Array], None);
         let mut fixer = ArrayFixer { ctx, scope };
         fixer.apply_all()
     }

@@ -1,12 +1,9 @@
 // src/diagnostics/array.rs
 
 use crate::diagnostics::Diagnoser;
+use crate::generated_patterns::regex::*;
 use crate::types::diagnostic_core::{DiagnosticSeverity, FixDiagnostic, FixDiagnosticKind};
-// use crate::types::emotion_phase::EmotionPhase;
-// use crate::types::fixer_context::FixContext;
-// use crate::utils::souldiag_utils::apply_diagnosis;
-
-include!("../../generated_patterns/array.rs");
+use crate::types::emotion_phase::EmotionPhase;
 
 /// Modular diagnoser for array-related syntax issues.
 /// This is the Fitrah-aligned version using the Diagnoser trait.
@@ -30,6 +27,8 @@ impl Diagnoser for ArrayDiagnoser {
             if let Some(mat) = regex.find(input) {
                 diagnostics.push(FixDiagnostic {
                     kind: FixDiagnosticKind::Array,
+                    emotion: EmotionPhase::Ready,
+                    step: "None".to_string(),
                     severity: DiagnosticSeverity::Warning,
                     message: REGEX_DESCRIPTIONS.get(key).unwrap().to_string(),
                     regex_key: key.to_string(),

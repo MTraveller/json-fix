@@ -12,7 +12,7 @@ use std::fs;
 struct RegexEntry {
     pattern: String,
     description: Option<String>,
-    category: Option<String>,
+    scope: Option<String>,
     enabled: Option<bool>,
     engine: Option<String>,
 }

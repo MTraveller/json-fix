@@ -10,13 +10,15 @@ manifest/
 project_structure.txt
 src/
   bin/
+    analyzer.rs
+    fixer_macro_codegen.rs
     fixer_map_generator.rs
   diagnostics/
     array.rs
     bracket.rs
     colon.rs
     comma.rs
-    diagnostics.rs
+    diagnoser.rs
     escape.rs
     js_style.rs
     key.rs
@@ -26,11 +28,11 @@ src/
     quote.rs
     structure.rs
   fixers/
-    arrays/
+    array/
       fixer.rs
       mod.rs
       subfixes.rs
-    brackets/
+    bracket/
       fixer.rs
       mod.rs
       subfixes.rs
@@ -51,7 +53,7 @@ src/
       fixer.rs
       mod.rs
       subfixes.rs
-    keys/
+    key/
       fixer.rs
       mod.rs
       subfixes.rs
@@ -64,7 +66,7 @@ src/
       mod.rs
       subfixes.rs
     mod.rs
-    quotes/
+    quote/
       fixer.rs
       mod.rs
       subfixes.rs
@@ -72,10 +74,25 @@ src/
       fixer.rs
       mod.rs
       subfixes.rs
+  generated/
+    fix_step.rs
+    fixer_dispatch_map.rs
+    mod.rs
+    regex_registry.rs
+  generated_patterns/
+    mod.rs
+    regex/
+      misc.rs
+      mod.rs
   lib.rs
+  macros/
+    fixer_macros.rs
+    mod.rs
   meta/
+    diagnostic_codegen.rs
     diagnostic_manifest_loader.rs
     mod.rs
+    regex_manifest_codegen.rs
   orchestrator/
     diag_commander.rs
     fix_commander.rs
@@ -86,6 +103,7 @@ src/
     diagnostic_core.rs
     emotion_phase.rs
     fix_environment.rs
+    fix_outcome.rs
     fix_report.rs
     fix_scope.rs
     fix_step.rs
@@ -103,6 +121,7 @@ src/
     regex_loader.rs
     souldiag_utils.rs
     soulfixer_utils.rs
+    span_utils.rs
     string_utils.rs
     token_utils.rs
 tests/

@@ -18,7 +18,7 @@ impl DiagCommander {
                 .iter()
                 .find(|entry| entry.kind == category_label(&diag.kind))
             {
-                if let Ok(scope) = entry.scope.parse::<ScopeCategory>() {
+                if let Ok(scope) = entry.category.parse::<ScopeCategory>() {
                     if !scopes.contains(&scope) {
                         scopes.push(scope);
                     }

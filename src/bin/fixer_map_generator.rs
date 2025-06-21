@@ -61,10 +61,15 @@ fn extract_regex_constants(project_root: &Path) -> HashMap<String, (String, Stri
 
     #[derive(Deserialize)]
     struct RegexEntry {
-        pattern: String,
-        description: Option<String>,
-        category: Option<String>,
-        enabled: Option<bool>,
+        pub kind: Option<String>,
+        pub subkind: Option<String>,
+        pub step: Option<String>,
+        pub label: Option<String>,
+        pub category: Option<String>,
+        pub severity: Option<String>,
+        pub emotion: Option<String>,
+        pub tags: Option<Vec<String>>,
+        pub enabled: Option<bool>,
     }
 
     let ron_path = project_root.join("manifest/regex_map.ron");
@@ -108,15 +113,15 @@ fn extract_domain(usage_path: &str) -> Option<String> {
     usage_path
         .split('/')
         .find(|s| {
-            *s == "arrays"
-                || *s == "brackets"
+            *s == "array"
+                || *s == "bracket"
                 || *s == "colon"
                 || *s == "escape"
                 || *s == "js_style"
-                || *s == "keys"
+                || *s == "key"
                 || *s == "markdown"
                 || *s == "misc"
-                || *s == "quotes"
+                || *s == "quote"
                 || *s == "structure"
         })
         .map(|s| s.to_string())

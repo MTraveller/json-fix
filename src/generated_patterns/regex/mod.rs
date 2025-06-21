@@ -1,7 +1,8 @@
 // 💡 AUTO-GENERATED FILE — DO NOT EDIT
 // ⚙️  To regenerate: cargo run --bin regex_manifest_codegen
 
-// This file is auto-generated. Do not edit manually.
+// Added by regex_manifest_codegen
 // ⚙️  To regenerate: cargo run --bin regex_manifest_codegen
 // 💡 AUTO-GENERATED FILE — DO NOT EDIT
-pub mod regex_registry;
+pub mod misc;
+pub use self::misc::*;

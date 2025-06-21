@@ -8,7 +8,7 @@ pub struct FixReport {
     pub original: String,
     pub fixed: String,
     pub steps: Vec<FixStep>,
-    pub diagnostics: FixDiagnostic,
+    pub diagnostics: Vec<FixDiagnostic>,
     /// Outcome summary for each fixer (whether it acted and why)
     pub fixer_outcomes: Vec<FixOutcome>,
 }
@@ -18,7 +18,7 @@ impl FixReport {
         original: String,
         fixed: String,
         steps: Vec<FixStep>,
-        diagnostics: FixDiagnostic,
+        diagnostics: Vec<FixDiagnostic>,
         fixer_outcomes: Vec<FixOutcome>,
     ) -> Self {
         Self {

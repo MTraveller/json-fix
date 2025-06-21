@@ -1,5 +1,5 @@
 use json_fix::diagnostics::analyze_all_diagnostics;
-use json_fix::fixers::keys::fixer::KeysFixer;
+use json_fix::fixers::key::fixer::KeysFixer;
 use json_fix::types::{emotion_phase::EmotionPhase, fixer_context::FixContext};
 
 #[test]

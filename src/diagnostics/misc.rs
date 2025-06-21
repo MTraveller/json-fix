@@ -1,9 +1,8 @@
 // src/diagnostics/misc.rs
 
 use crate::diagnostics::Diagnoser;
+use crate::generated_patterns::regex::*;
 use crate::types::diagnostic_core::{DiagnosticSeverity, FixDiagnostic, FixDiagnosticKind};
-
-include!("../../generated_patterns/misc.rs");
 
 pub struct MiscDiagnoser;
 

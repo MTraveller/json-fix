@@ -7,10 +7,15 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 struct DiagnosticEntry {
-    kind: String,
-    scope: String,
-    step: String,
-    _label: String,
+    pub kind: String,
+    pub subkind: String,
+    pub step: String,
+    pub label: String,
+    pub category: String,
+    pub severity: String,
+    pub emotion: String,
+    pub tags: Vec<String>,
+    pub enabled: bool,
 }
 
 fn main() {
@@ -22,7 +27,7 @@ fn main() {
 
     for entry in entries {
         // Skip if step or scope is empty
-        if entry.step.is_empty() || entry.scope.is_empty() {
+        if entry.step.is_empty() || entry.category.is_empty() {
             continue;
         }
 

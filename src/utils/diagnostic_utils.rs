@@ -19,7 +19,7 @@ pub fn category_label(category: &FixDiagnosticKind) -> &'static str {
         FixDiagnosticKind::Misc => "Misc",
         FixDiagnosticKind::Quote => "Quote",
         FixDiagnosticKind::Structure => "Structure",
-        FixDiagnosticKind::JS => "JS",
+        FixDiagnosticKind::JsStyle => "JsStyle",
     }
 }
 
@@ -35,9 +35,9 @@ fn get_scope_label_map() -> HashMap<ScopeCategory, &'static str> {
         (Key, "Key"),
         (Markdown, "Markdown"),
         (Misc, "Misc"),
-        (Quote, "Quotes"),
+        (Quote, "Quote"),
         (Structure, "Structure"),
-        (JS, "JavaScript"),
+        (JsStyle, "JsStyle"),
     ])
 }
 

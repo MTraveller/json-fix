@@ -1,5 +1,6 @@
 // fixers/arrays/subfixes.rs
 
+use crate::generated_patterns::regex::*;
 use crate::types::fix_scope::{FixScope, ScopeCategory};
 use crate::types::{emotion_phase::EmotionPhase, fix_step::FixStep, fixer_context::FixContext};
 use crate::utils::soulfixer_utils::apply_fix;

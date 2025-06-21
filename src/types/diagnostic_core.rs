@@ -1,3 +1,5 @@
+use crate::types::emotion_phase::EmotionPhase;
+
 #[derive(Debug, Clone, Copy)]
 pub enum DiagnosticSeverity {
     Info,
@@ -24,7 +26,8 @@ pub enum FixDiagnosticKind {
     Misc,
     Quote,
     Structure,
-    JS,
+    JsStyle,
+    Other,
 }
 
 impl Default for FixDiagnosticKind {
@@ -36,8 +39,13 @@ impl Default for FixDiagnosticKind {
 #[derive(Debug, Clone)]
 pub struct FixDiagnostic {
     pub kind: FixDiagnosticKind,
+    pub subkind: String,
+    pub step: String,
     pub severity: DiagnosticSeverity,
+    pub emotion: EmotionPhase,
     pub message: String,
     pub span: Option<(usize, usize)>,
     pub regex_key: String,
+    pub tags: Vec<String>,
+    pub enabled: bool,
 }

@@ -1,16 +1,21 @@
 // src/fixers/comma/fixes.rs
 
-use crate::types::emotion_phase::EmotionPhase;
 use crate::generated::fix_step::FixStep;
+use crate::types::emotion_phase::EmotionPhase;
+use crate::types::fix_scope::{FixScope, ScopeCategory};
 use crate::types::fixer_context::FixContext;
 use crate::utils::soulfixer_utils::apply_fix;
 
 pub struct SubCommaFixer;
 
 impl SubCommaFixer {
-    pub fn fix_double_commas(ctx: &mut FixContext) -> String {
+    pub fn fix_double_commas(ctx: &mut FixContext, scope: &mut FixScope) -> String {
         if ctx.emotion_phase == EmotionPhase::Frozen {
             ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_double_commas.");
+            return ctx.input.to_string();
+        }
+        if !scope.allows(ScopeCategory::Comma) {
+            ctx.whisper("FixScope excludes Comma: skipping fix_double_commas.");
             return ctx.input.to_string();
         }
 
@@ -23,9 +28,13 @@ impl SubCommaFixer {
         )
     }
 
-    pub fn fix_misaligned_key_value(ctx: &mut FixContext) -> String {
+    pub fn fix_misaligned_key_value(ctx: &mut FixContext, scope: &mut FixScope) -> String {
         if ctx.emotion_phase == EmotionPhase::Frozen {
             ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_misaligned_key_value.");
+            return ctx.input.to_string();
+        }
+        if !scope.allows(ScopeCategory::Comma) {
+            ctx.whisper("FixScope excludes Comma: skipping fix_misaligned_key_value.");
             return ctx.input.to_string();
         }
 
@@ -38,9 +47,13 @@ impl SubCommaFixer {
         )
     }
 
-    pub fn fix_orphaned_values(ctx: &mut FixContext) -> String {
+    pub fn fix_orphaned_values(ctx: &mut FixContext, scope: &mut FixScope) -> String {
         if ctx.emotion_phase == EmotionPhase::Frozen {
             ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_orphaned_values.");
+            return ctx.input.to_string();
+        }
+        if !scope.allows(ScopeCategory::Comma) {
+            ctx.whisper("FixScope excludes Comma: skipping fix_orphaned_values.");
             return ctx.input.to_string();
         }
 
@@ -53,9 +66,13 @@ impl SubCommaFixer {
         )
     }
 
-    pub fn fix_stray_commas(ctx: &mut FixContext) -> String {
+    pub fn fix_stray_commas(ctx: &mut FixContext, scope: &mut FixScope) -> String {
         if ctx.emotion_phase == EmotionPhase::Frozen {
             ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_stray_commas.");
+            return ctx.input.to_string();
+        }
+        if !scope.allows(ScopeCategory::Comma) {
+            ctx.whisper("FixScope excludes Comma: skipping fix_stray_commas.");
             return ctx.input.to_string();
         }
 
@@ -68,9 +85,13 @@ impl SubCommaFixer {
         )
     }
 
-    pub fn fix_chained_values(ctx: &mut FixContext) -> String {
+    pub fn fix_chained_values(ctx: &mut FixContext, scope: &mut FixScope) -> String {
         if ctx.emotion_phase == EmotionPhase::Frozen {
             ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_chained_values.");
+            return ctx.input.to_string();
+        }
+        if !scope.allows(ScopeCategory::Comma) {
+            ctx.whisper("FixScope excludes Comma: skipping fix_chained_values.");
             return ctx.input.to_string();
         }
 
@@ -83,9 +104,13 @@ impl SubCommaFixer {
         )
     }
 
-    pub fn fix_missing_commas_between_pairs(ctx: &mut FixContext) -> String {
+    pub fn fix_missing_commas_between_pairs(ctx: &mut FixContext, scope: &mut FixScope) -> String {
         if ctx.emotion_phase == EmotionPhase::Frozen {
             ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_missing_commas_between_pairs.");
+            return ctx.input.to_string();
+        }
+        if !scope.allows(ScopeCategory::Comma) {
+            ctx.whisper("FixScope excludes Comma: skipping fix_missing_commas_between_pairs.");
             return ctx.input.to_string();
         }
 
@@ -97,9 +122,13 @@ impl SubCommaFixer {
             "Inserted missing commas between key-value pairs",
         )
     }
-    pub fn fix_trailing_commas(ctx: &mut FixContext) -> String {
+    pub fn fix_trailing_commas(ctx: &mut FixContext, scope: &mut FixScope) -> String {
         if ctx.emotion_phase == EmotionPhase::Frozen {
             ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_trailing_commas.");
+            return ctx.input.to_string();
+        }
+        if !scope.allows(ScopeCategory::Comma) {
+            ctx.whisper("FixScope excludes Comma: skipping fix_trailing_commas.");
             return ctx.input.to_string();
         }
 

@@ -1,8 +1,8 @@
 // src/diagnostics/bracket.rs
 
 use crate::diagnostics::Diagnoser;
+use crate::generated_patterns::regex::*;
 use crate::types::diagnostic_core::{DiagnosticSeverity, FixDiagnostic, FixDiagnosticKind};
-use crate::utils::span_utils::estimate_bracket_span;
 
 pub struct BracketDiagnoser;
 

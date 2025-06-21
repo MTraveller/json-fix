@@ -1,14 +1,21 @@
 // src/fixers/quotes/subfixes.rs
 
+use crate::types::fix_outcome::FixOutcome;
+use crate::types::fix_scope::{FixScope, ScopeCategory};
 use crate::types::{emotion_phase::EmotionPhase, fix_step::FixStep, fixer_context::FixContext};
 use crate::utils::soulfixer_utils::apply_fix;
 
-pub struct SubQuotesFixer;
+pub struct SubQuoteFixer;
 
-impl SubQuotesFixer {
-    pub fn fix_single_quotes(ctx: &mut FixContext) -> String {
+impl SubQuoteFixer {
+    pub fn fix_single_quotes(ctx: &mut FixContext, scope: &mut FixScope) -> FixOutcome {
         if ctx.emotion_phase == EmotionPhase::Frozen {
             ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_single_quotes.");
+            return ctx.input.to_string();
+        }
+
+        if !scope.allows(ScopeCategory::Quote) {
+            ctx.whisper("FixScope excludes Quote: skipping fix_single_quotes.");
             return ctx.input.to_string();
         }
 
@@ -21,9 +28,14 @@ impl SubQuotesFixer {
         )
     }
 
-    pub fn fix_curly_quotes(ctx: &mut FixContext) -> String {
+    pub fn fix_curly_quotes(ctx: &mut FixContext, scope: &mut FixScope) -> FixOutcome {
         if ctx.emotion_phase == EmotionPhase::Frozen {
             ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_curly_quotes.");
+            return ctx.input.to_string();
+        }
+
+        if !scope.allows(ScopeCategory::Quote) {
+            ctx.whisper("FixScope excludes Quote: skipping fix_curly_quotes.");
             return ctx.input.to_string();
         }
 

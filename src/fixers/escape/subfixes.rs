@@ -1,7 +1,8 @@
 // src/fixers/escape/subfixes.rs
 
-use crate::types::emotion_phase::EmotionPhase;
 use crate::generated::fix_step::FixStep;
+use crate::types::emotion_phase::EmotionPhase;
+use crate::types::fix_scope::{FixScope, ScopeCategory};
 use crate::types::fixer_context::FixContext;
 use crate::utils::soulfixer_utils::apply_fix;
 
@@ -9,9 +10,14 @@ pub struct SubEscapeFixer;
 
 impl SubEscapeFixer {
     /// Removes invalid escape sequences like `\q`, `\z`, etc.
-    pub fn fix_invalid_escapes(ctx: &mut FixContext) -> String {
+    pub fn fix_invalid_escapes(ctx: &mut FixContext, scope: &mut FixScope) -> String {
         if ctx.emotion_phase == EmotionPhase::Frozen {
             ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_invalid_escapes.");
+            return ctx.input.to_string();
+        }
+
+        if !scope.allows(ScopeCategory::Escape) {
+            ctx.whisper("FixScope excludes Escape: skipping fix_invalid_escapes.");
             return ctx.input.to_string();
         }
 
@@ -25,9 +31,14 @@ impl SubEscapeFixer {
     }
 
     /// Replaces broken or incomplete Unicode escapes like `\u12` or `\uXYZ` with `\uFFFD` (replacement char).
-    pub fn fix_broken_unicode(ctx: &mut FixContext) -> String {
+    pub fn fix_broken_unicode(ctx: &mut FixContext, scope: &mut FixScope) -> String {
         if ctx.emotion_phase == EmotionPhase::Frozen {
             ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_broken_unicode.");
+            return ctx.input.to_string();
+        }
+
+        if !scope.allows(ScopeCategory::Escape) {
+            ctx.whisper("FixScope excludes Escape: skipping fix_broken_unicode.");
             return ctx.input.to_string();
         }
 

@@ -1,5 +1,6 @@
 use crate::generated::fix_step::FixStep;
 use crate::types::emotion_phase::EmotionPhase;
+use crate::types::fix_scope::{FixScope, ScopeCategory};
 use crate::types::fixer_context::FixContext;
 use crate::utils::soulfixer_utils::apply_fix;
 
@@ -7,9 +8,14 @@ pub struct SubStructureFixer;
 
 impl SubStructureFixer {
     /// Attempts to fix concatenated root JSON objects (e.g., `}{` → `},{`)
-    pub fn fix_concatenated_json(ctx: &mut FixContext) -> String {
+    pub fn fix_concatenated_json(ctx: &mut FixContext, scope: &mut FixScope) -> String {
         if ctx.emotion_phase == EmotionPhase::Frozen {
             ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_concatenated_json.");
+            return ctx.input.to_string();
+        }
+
+        if !scope.allows(ScopeCategory::Structure) {
+            ctx.whisper("FixScope excludes Structure: skipping fix_concatenated_json.");
             return ctx.input.to_string();
         }
 
@@ -23,11 +29,17 @@ impl SubStructureFixer {
     }
 
     /// Attempts to resolve orphaned braces by balancing `{` and `}`
-    pub fn fix_orphaned_braces(ctx: &mut FixContext) -> String {
+    pub fn fix_orphaned_braces(ctx: &mut FixContext, scope: &mut FixScope) -> String {
         if ctx.emotion_phase == EmotionPhase::Frozen {
             ctx.whisper("🥶 EmotionPhase is Frozen. Skipping fix_orphaned_braces.");
             return ctx.input.to_string();
         }
+
+        if !scope.allows(ScopeCategory::Structure) {
+            ctx.whisper("FixScope excludes Structure: skipping fix_orphaned_braces.");
+            return ctx.input.to_string();
+        }
+
         let mut new_input = ctx.input.to_string();
         let open_count = new_input.matches('{').count();
         let close_count = new_input.matches('}').count();

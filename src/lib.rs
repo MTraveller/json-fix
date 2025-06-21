@@ -2,6 +2,7 @@
 pub mod diagnostics;
 pub mod fixers;
 pub mod generated;
+pub mod generated_patterns;
 pub mod macros;
 pub mod meta;
 pub mod orchestrator;

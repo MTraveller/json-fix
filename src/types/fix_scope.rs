@@ -1,5 +1,8 @@
 // src/types/fix_scope.rs
 
+use crate::types::emotion_phase::EmotionPhase;
+use crate::types::{diagnostic_core::FixDiagnostic, fixer_flags::FixerFlags};
+
 /// Represents the high-level category or domain of a fix scope.
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 pub enum ScopeCategory {
@@ -13,7 +16,7 @@ pub enum ScopeCategory {
     Misc,
     Quote,
     Structure,
-    JS,
+    JsStyle,
 }
 
 /// Tracks and controls scoped mutations within a single fixer run,
@@ -28,15 +31,18 @@ pub struct FixScope {
 
     /// Active categories or domains allowed to fix in this scope.
     active_scopes: std::collections::HashSet<ScopeCategory>,
+
+    pub emotion_phase: EmotionPhase,
 }
 
 impl FixScope {
     /// Creates a new FixScope for a given input string and initial active scopes.
-    pub fn new(input: &str, initial_scopes: &[ScopeCategory]) -> Self {
+    pub fn new(input: &str, initial_scopes: &[ScopeCategory], emotion_phase: EmotionPhase) -> Self {
         Self {
             input: input.to_string(),
             touched_ranges: Vec::new(),
             active_scopes: initial_scopes.iter().cloned().collect(),
+            emotion_phase,
         }
     }
 
@@ -87,5 +93,21 @@ impl FixScope {
     /// Utility function to check if two ranges overlap.
     fn ranges_overlap(s1: usize, e1: usize, s2: usize, e2: usize) -> bool {
         !(e1 <= s2 || e2 <= s1)
+    }
+
+    pub fn should_apply(&self, diag: &FixDiagnostic, flags: &FixerFlags) -> bool {
+        if !diag.enabled {
+            return false;
+        }
+        if diag.tags.contains(&"aggressive".to_string()) && !flags.allow_aggressive {
+            return false;
+        }
+        if !self.is_active(diag.kind.into()) {
+            return false;
+        }
+        if self.emotion_phase == EmotionPhase::Frozen && !diag.tags.contains(&"safe".to_string()) {
+            return false;
+        }
+        true
     }
 }

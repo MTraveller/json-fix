@@ -6,8 +6,15 @@ use std::path::Path;
 
 #[derive(Debug, Deserialize)]
 struct FixDiagnosticManifest {
-    step: String,
-    label: String,
+    pub kind: String,
+    pub subkind: String,
+    pub step: String,
+    pub label: String,
+    pub category: String,
+    pub severity: String,
+    pub emotion: String,
+    pub tags: Vec<String>,
+    pub enabled: bool,
 }
 
 fn main() {
